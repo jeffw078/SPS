@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - Spare Parts Suppliers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            margin-right: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -6px 0 white, 0 6px 0 white;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #f81927;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            bottom: 8px;
+            background: #f81927;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            padding: 0 12px;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #c53030;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notifications-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .notifications-btn:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #f81927;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-btn:hover {
+            border-color: #f81927;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #4a5568;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .dropdown-item:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Sidebar */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 12px 1.5rem;
+            text-decoration: none;
+            color: #4a5568;
+            transition: all 0.2s;
+            border-right: 3px solid transparent;
+        }
+
+        .menu-link:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .menu-link.active {
+            background: #fff5f5;
+            color: #f81927;
+            border-right-color: #f81927;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            width: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f81927, #c53030);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .trend-down {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Search */
+        .quick-search {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .category-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: #f81927;
+            color: #f81927;
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: #f7fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .view-all-link {
+            color: #f81927;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            color: #1a202c;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #f81927;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        /* Notifications Dropdown */
+        .notifications-dropdown {
+            position: absolute;
+            top: 100%;
+            right: -100px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 400px;
+            z-index: 1001;
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .notifications-dropdown.show {
+            display: block;
+        }
+
+        .notifications-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-title {
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .mark-all-read {
+            color: #f81927;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .notification-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f7fafc;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-item.unread {
+            background: #fff5f5;
+            border-left: 3px solid #f81927;
+        }
+
+        .notification-content {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+
+        /* Quote Cards */
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quote-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .quote-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-responded {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .status-closed {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .part-details {
+            margin-bottom: 1rem;
+        }
+
+        .part-name {
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .part-number {
+            color: #f81927;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .quote-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #f7fafc;
+        }
+
+        .supplier-count {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .quote-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+                position: relative;
+            }
+
+            .sidebar {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.2rem;
+                color: #4a5568;
+                cursor: pointer;
+                padding: 8px;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quotes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notifications-dropdown {
+                width: 300px;
+                right: -50px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <a href="index.html" class="logo">
+                 <a href="index.html" class="logo">                
+                <img src="assets/img/logo.png" alt="">            
+            </a>
+            </a>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search for parts, part numbers, or brands..." id="headerSearch">
+                <button class="search-btn" onclick="performHeaderSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <div class="header-actions">
+                <div class="notifications-btn" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge" id="notificationCount">5</div>
+                    
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <div class="notifications-title">Notifications</div>
+                            <a href="#" class="mark-all-read" onclick="markAllRead()">Mark all read</a>
+                        </div>
+                        
+                        <div id="notificationsList">
+                            <div class="notification-item unread" onclick="openNotification('quote-response-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #48bb78;">
+                                        <i class="fas fa-reply"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">Quote Response</div>
+                                        <div class="notification-message">Global Auto Parts responded to your BMW brake pads request</div>
+                                        <div class="notification-time">5 minutes ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item unread" onclick="openNotification('message-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #f81927;">
+                                        <i class="fas fa-comment"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">New Message</div>
+                                        <div class="notification-message">Euro Auto Parts sent you a message about pricing</div>
+                                        <div class="notification-time">1 hour ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item unread" onclick="openNotification('part-available-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #f6ad55;">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">Part Available</div>
+                                        <div class="notification-message">The Mercedes part you were looking for is now in stock</div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-menu">
+                    <button class="user-btn" onclick="toggleUserMenu()">
+                        <div class="user-avatar">JM</div>
+                        <span>John Mechanic</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" onclick="showSection('profile')">
+                            <i class="fas fa-user"></i>
+                            My Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSection('settings')">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSection('favorites')">
+                            <i class="fas fa-heart"></i>
+                            Favorites
+                        </a>
+                        <a href="faq.html" class="dropdown-item">
+                            <i class="fas fa-question-circle"></i>
+                            Help & Support
+                        </a>
+                        <a href="index.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link active" onclick="showSection('overview')">
+                            <i class="fas fa-home menu-icon"></i>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('search')">
+                            <i class="fas fa-search menu-icon"></i>
+                            Search Parts
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('quotes')">
+                            <i class="fas fa-envelope menu-icon"></i>
+                            My Quotes
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('messages')">
+                            <i class="fas fa-comments menu-icon"></i>
+                            Messages
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Activity</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('favorites')">
+                            <i class="fas fa-heart menu-icon"></i>
+                            Favorites
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('history')">
+                            <i class="fas fa-history menu-icon"></i>
+                            Search History
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('watchlist')">
+                            <i class="fas fa-bell menu-icon"></i>
+                            Watchlist
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Account</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('profile')">
+                            <i class="fas fa-user menu-icon"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('settings')">
+                            <i class="fas fa-cog menu-icon"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section class="content-section active" id="overview">
+                <div class="page-header">
+                    <h1 class="page-title">Welcome Back, John!</h1>
+                    <p class="page-subtitle">Find the auto parts you need from verified suppliers worldwide.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+3</div>
+                        </div>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Active Quote Requests</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-reply"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+7</div>
+                        </div>
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Quotes Received</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+2</div>
+                        </div>
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">Saved Suppliers</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+15</div>
+                        </div>
+                        <div class="stat-number">134</div>
+                        <div class="stat-label">Parts Searched</div>
+                    </div>
+                </div>
+
+                <div class="quick-search">
+                    <h3 style="margin-bottom: 0.5rem; color: #1a202c;">Quick Part Search</h3>
+                    <p style="color: #4a5568; margin-bottom: 1.5rem;">Find parts by category or search specifically</p>
+                    
+                    <div class="search-categories">
+                        <a href="#" class="category-btn" onclick="searchByCategory('engine')">
+                            <div class="category-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            Engine Parts
+                        </a>
+                        <a href="#" class="category-btn" onclick="searchByCategory('brake')">
+                            <div class="category-icon">
+                                <i class="fas fa-stop-circle"></i>
+                            </div>
+                            Brake System
+                        </a>
+                        <a href="#" class="category-btn" onclick="searchByCategory('suspension')">
+                            <div class="category-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            Suspension
+                        </a>
+                        <a href="#" class="category-btn" onclick="searchByCategory('electrical')">
+                            <div class="category-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            Electrical
+                        </a>
+                        <a href="#" class="category-btn" onclick="searchByCategory('transmission')">
+                            <div class="category-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            Transmission
+                        </a>
+                        <a href="#" class="category-btn" onclick="searchByCategory('body')">
+                            <div class="category-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            Body Parts
+                        </a>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Recent Activity</h3>
+                        <a href="#" class="view-all-link">View all</a>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #48bb78;">
+                            <i class="fas fa-reply"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Received quote response for BMW brake pads</div>
+                            <div class="activity-time">5 minutes ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #f81927;">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">New message from Euro Auto Parts</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #f6ad55;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Searched for Mercedes air suspension parts</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #9f7aea;">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Added Global Auto Parts to favorites</div>
+                            <div class="activity-time">1 day ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quotes Section -->
+            <section class="content-section" id="quotes">
+                <div class="page-header">
+                    <h1 class="page-title">My Quote Requests</h1>
+                    <p class="page-subtitle">Track and manage your quote requests from suppliers</p>
+                </div>
+
+                <div class="quotes-grid">
+                    <div class="quote-card">
+                        <div class="quote-header">
+                            <div class="quote-status status-responded">3 Responses</div>
+                        </div>
+                        <div class="part-details">
+                            <div class="part-name">BMW Brake Pad Set, Front Axle</div>
+                            <div class="part-number">Part #5031016810</div>
+                        </div>
+                        <div class="quote-footer">
+                            <div class="supplier-count">23 suppliers contacted</div>
+                            <div class="quote-actions">
+                                <a href="#" class="btn btn-primary btn-small">View Responses</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quote-card">
+                        <div class="quote-header">
+                            <div class="quote-status status-pending">Pending</div>
+                        </div>
+                        <div class="part-details">
+                            <div class="part-name">Mercedes Air Suspension Strut</div>
+                            <div class="part-number">Part #A2203202438</div>
+                        </div>
+                        <div class="quote-footer">
+                            <div class="supplier-count">15 suppliers contacted</div>
+                            <div class="quote-actions">
+                                <a href="#" class="btn btn-secondary btn-small">Waiting</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quote-card">
+                        <div class="quote-header">
+                            <div class="quote-status status-responded">1 Response</div>
+                        </div>
+                        <div class="part-details">
+                            <div class="part-name">Audi Brake Disc Set</div>
+                            <div class="part-number">Part #8K0615301M</div>
+                        </div>
+                        <div class="quote-footer">
+                            <div class="supplier-count">19 suppliers contacted</div>
+                            <div class="quote-actions">
+                                <a href="#" class="btn btn-primary btn-small">View Response</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section class="content-section" id="profile">
+                <div class="page-header">
+                    <h1 class="page-title">My Profile</h1>
+                    <p class="page-subtitle">Manage your personal information and workshop details</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-user"></i>
+                            Personal Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-input" value="John" id="firstName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-input" value="Mechanic" id="lastName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" value="john@workshop-birmingham.co.uk" id="email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" value="+44 121 123 4567" id="phone">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-wrench"></i>
+                            Workshop Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Workshop Name</label>
+                            <input type="text" class="form-input" value="Birmingham Auto Repair" id="workshopName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Business Type</label>
+                            <select class="form-select" id="businessType">
+                                <option value="independent" selected>Independent Mechanic</option>
+                                <option value="chain">Chain Workshop</option>
+                                <option value="dealership">Dealership</option>
+                                <option value="fleet">Fleet Maintenance</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-input" value="123 High Street, Birmingham" id="address">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" id="country">
+                                <option value="UK" selected>United Kingdom</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="IT">Italy</option>
+                                <option value="ES">Spain</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Specializations</label>
+                            <textarea class="form-textarea" id="specializations">European cars, BMW, Mercedes-Benz, Audi, Volkswagen specialist. 15+ years experience in automotive repair.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="saveBuyerProfile()">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetBuyerProfile()">
+                        <i class="fas fa-undo"></i>
+                        Reset
+                    </button>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settings">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Manage your account preferences and notifications</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-bell"></i>
+                            Notification Preferences
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked id="emailQuoteResponses">
+                                Email me when suppliers respond to my quotes
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked id="emailNewMessages">
+                                Email me about new messages from suppliers
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked id="emailPartAlerts">
+                                Alert me when watched parts become available
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="emailPromotions">
+                                Send me promotional offers and updates
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Notification Frequency</label>
+                            <select class="form-select" id="notificationFrequency">
+                                <option value="instant" selected>Instant</option>
+                                <option value="daily">Daily digest</option>
+                                <option value="weekly">Weekly summary</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-lock"></i>
+                            Privacy & Security
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-input" placeholder="Enter current password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-input" placeholder="Enter new password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-input" placeholder="Confirm new password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="profileVisible">
+                                Make my workshop profile visible to suppliers
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="twoFactorAuth">
+                                Enable two-factor authentication
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="saveBuyerSettings()">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </section>
+
+            <!-- Other placeholder sections -->
+            <section class="content-section" id="search">
+                <div class="page-header">
+                    <h1 class="page-title">Search Parts</h1>
+                    <p class="page-subtitle">Find the exact parts you need from global suppliers</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-search" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Advanced Part Search</h3>
+                    <p>This section would contain the advanced search interface.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="messages">
+                <div class="page-header">
+                    <h1 class="page-title">Messages</h1>
+                    <p class="page-subtitle">Chat with suppliers about your parts needs</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-comments" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Message Center</h3>
+                    <p>This section would contain your messaging interface with suppliers.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="favorites">
+                <div class="page-header">
+                    <h1 class="page-title">Favorite Suppliers</h1>
+                    <p class="page-subtitle">Your saved suppliers and preferred partners</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-heart" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Favorite Suppliers</h3>
+                    <p>This section would show your saved suppliers and their details.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="history">
+                <div class="page-header">
+                    <h1 class="page-title">Search History</h1>
+                    <p class="page-subtitle">Your recent searches and quote requests</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-history" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Search History</h3>
+                    <p>This section would contain your search and quote history.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="watchlist">
+                <div class="page-header">
+                    <h1 class="page-title">Parts Watchlist</h1>
+                    <p class="page-subtitle">Get notified when these parts become available</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-bell" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Parts Watchlist</h3>
+                    <p>This section would contain parts you're watching for availability.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation functions (same as supplier dashboard)
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            const menuLink = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (menuLink) {
+                menuLink.classList.add('active');
+            }
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+            
+            document.getElementById('userDropdown').classList.remove('show');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+
+        function toggleNotifications() {
+            document.getElementById('notificationsDropdown').classList.toggle('show');
+        }
+
+        function markAllRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            document.getElementById('notificationCount').textContent = '0';
+            document.getElementById('notificationCount').style.display = 'none';
+        }
+
+        function openNotification(notificationId) {
+            console.log('Opening notification:', notificationId);
+            event.target.closest('.notification-item').classList.remove('unread');
+            
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            document.getElementById('notificationCount').textContent = unreadCount;
+            if (unreadCount === 0) {
+                document.getElementById('notificationCount').style.display = 'none';
+            }
+        }
+
+        // Header search
+        function performHeaderSearch() {
+            const searchTerm = document.getElementById('headerSearch').value;
+            if (searchTerm.trim()) {
+                console.log('Searching for:', searchTerm);
+                window.location.href = `search.html?q=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        document.getElementById('headerSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performHeaderSearch();
+            }
+        });
+
+        // Category search
+        function searchByCategory(category) {
+            console.log('Searching category:', category);
+            window.location.href = `search.html?category=${category}`;
+        }
+
+        // Profile functions
+        function saveBuyerProfile() {
+            const profileData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                workshopName: document.getElementById('workshopName').value,
+                businessType: document.getElementById('businessType').value,
+                address: document.getElementById('address').value,
+                country: document.getElementById('country').value,
+                specializations: document.getElementById('specializations').value
+            };
+            
+            console.log('Saving buyer profile:', profileData);
+            
+            setTimeout(() => {
+                alert('Profile saved successfully!');
+            }, 500);
+        }
+
+        function resetBuyerProfile() {
+            if (confirm('Are you sure you want to reset all changes?')) {
+                document.getElementById('firstName').value = 'John';
+                document.getElementById('lastName').value = 'Mechanic';
+                document.getElementById('email').value = 'john@workshop-birmingham.co.uk';
+                document.getElementById('phone').value = '+44 121 123 4567';
+                document.getElementById('workshopName').value = 'Birmingham Auto Repair';
+                document.getElementById('businessType').value = 'independent';
+                document.getElementById('address').value = '123 High Street, Birmingham';
+                document.getElementById('country').value = 'UK';
+                document.getElementById('specializations').value = 'European cars, BMW, Mercedes-Benz, Audi, Volkswagen specialist. 15+ years experience in automotive repair.';
+            }
+        }
+
+        function saveBuyerSettings() {
+            const settingsData = {
+                emailQuoteResponses: document.getElementById('emailQuoteResponses').checked,
+                emailNewMessages: document.getElementById('emailNewMessages').checked,
+                emailPartAlerts: document.getElementById('emailPartAlerts').checked,
+                emailPromotions: document.getElementById('emailPromotions').checked,
+                notificationFrequency: document.getElementById('notificationFrequency').value,
+                profileVisible: document.getElementById('profileVisible').checked,
+                twoFactorAuth: document.getElementById('twoFactorAuth').checked
+            };
+            
+            console.log('Saving buyer settings:', settingsData);
+            
+            setTimeout(() => {
+                alert('Settings saved successfully!');
+            }, 500);
+        }
+
+        // Real-time notifications simulation
+        function simulateNewBuyerNotification() {
+            const notifications = [
+                {
+                    icon: 'fas fa-reply',
+                    color: '#48bb78',
+                    title: 'Quote Response',
+                    message: 'New quote received for your BMW parts request',
+                    time: 'just now'
+                },
+                {
+                    icon: 'fas fa-comment',
+                    color: '#f81927',
+                    title: 'New Message',
+                    message: 'Supplier sent you pricing details',
+                    time: 'just now'
+                },
+                {
+                    icon: 'fas fa-cog',
+                    color: '#f6ad55',
+                    title: 'Part Available',
+                    message: 'A part from your watchlist is now in stock',
+                    time: 'just now'
+                }
+            ];
+            
+            const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+            
+            const notificationsList = document.getElementById('notificationsList');
+            const newNotificationHtml = `
+                <div class="notification-item unread" onclick="openNotification('new-${Date.now()}')">
+                    <div class="notification-content">
+                        <div class="notification-icon" style="background: ${randomNotification.color};">
+                            <i class="${randomNotification.icon}"></i>
+                        </div>
+                        <div class="notification-text">
+                            <div class="notification-title">${randomNotification.title}</div>
+                            <div class="notification-message">${randomNotification.message}</div>
+                            <div class="notification-time">${randomNotification.time}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            notificationsList.insertAdjacentHTML('afterbegin', newNotificationHtml);
+            
+            const currentCount = parseInt(document.getElementById('notificationCount').textContent);
+            document.getElementById('notificationCount').textContent = currentCount + 1;
+            document.getElementById('notificationCount').style.display = 'flex';
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.notifications-btn')) {
+                document.getElementById('notificationsDropdown').classList.remove('show');
+            }
+            if (!event.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+
+        // Simulate new notifications
+        setInterval(() => {
+            if (Math.random() > 0.8) { // 20% chance
+                simulateNewBuyerNotification();
+            }
+        }, 25000);
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('overview');
+            
+            // Update stats periodically
+            setInterval(() => {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    if (Math.random() > 0.95) { // 5% chance to update
+                        const currentValue = parseInt(stat.textContent);
+                        const change = Math.floor(Math.random() * 2); // 0 or 1
+                        if (currentValue + change >= 0) {
+                            stat.textContent = (currentValue + change);
+                        }
+                    }
+                });
+            }, 15000);
+        });
+    </script>
+</body>
+</html>

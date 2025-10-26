@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Dashboard - Spare Parts Suppliers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            margin-right: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -6px 0 white, 0 6px 0 white;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notifications-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .notifications-btn:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #f81927;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-btn:hover {
+            border-color: #f81927;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f81927, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #4a5568;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .dropdown-item:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Sidebar */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 12px 1.5rem;
+            text-decoration: none;
+            color: #4a5568;
+            transition: all 0.2s;
+            border-right: 3px solid transparent;
+        }
+
+        .menu-link:hover {
+            background: #f7fafc;
+            color: #f81927;
+        }
+
+        .menu-link.active {
+            background: #fff5f5;
+            color: #f81927;
+            border-right-color: #f81927;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            width: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f81927, #c53030);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .trend-down {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            border-color: #f81927;
+            color: #f81927;
+            transform: translateY(-1px);
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .view-all-link {
+            color: #f81927;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            color: #1a202c;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #f81927;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        /* Notifications Dropdown */
+        .notifications-dropdown {
+            position: absolute;
+            top: 100%;
+            right: -100px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 400px;
+            z-index: 1001;
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .notifications-dropdown.show {
+            display: block;
+        }
+
+        .notifications-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-title {
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .mark-all-read {
+            color: #f81927;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .notification-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f7fafc;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-item.unread {
+            background: #fff5f5;
+            border-left: 3px solid #f81927;
+        }
+
+        .notification-content {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+                position: relative;
+            }
+
+            .sidebar {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.2rem;
+                color: #4a5568;
+                cursor: pointer;
+                padding: 8px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notifications-dropdown {
+                width: 300px;
+                right: -50px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #f81927;
+            background: #fff5f5;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #f81927;
+            background: #fff5f5;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #f7fafc;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a202c;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .data-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-inactive {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <a href="index.html" class="logo">
+                <a href="index.html" class="logo">                
+                <img src="assets/img/logo.png" alt="">            
+            </a>
+            </a>
+
+            <div class="header-actions">
+                <div class="notifications-btn" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge" id="notificationCount">3</div>
+                    
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <div class="notifications-title">Notifications</div>
+                            <a href="#" class="mark-all-read" onclick="markAllRead()">Mark all read</a>
+                        </div>
+                        
+                        <div id="notificationsList">
+                            <div class="notification-item unread" onclick="openNotification('quote-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #f81927;">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">New Quote Request</div>
+                                        <div class="notification-message">BMW brake pads needed from UK mechanic</div>
+                                        <div class="notification-time">2 minutes ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item unread" onclick="openNotification('message-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #48bb78;">
+                                        <i class="fas fa-comment"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">New Message</div>
+                                        <div class="notification-message">Customer asking about delivery time</div>
+                                        <div class="notification-time">15 minutes ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item unread" onclick="openNotification('payment-1')">
+                                <div class="notification-content">
+                                    <div class="notification-icon" style="background: #f6ad55;">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <div class="notification-title">Payment Reminder</div>
+                                        <div class="notification-message">Premium plan renewal in 3 days</div>
+                                        <div class="notification-time">1 hour ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-menu">
+                    <button class="user-btn" onclick="toggleUserMenu()">
+                        <div class="user-avatar">GAP</div>
+                        <span>Global Auto Parts</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" onclick="showSection('profile')">
+                            <i class="fas fa-user"></i>
+                            My Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSection('settings')">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                        <a href="pricing.html" class="dropdown-item">
+                            <i class="fas fa-crown"></i>
+                            Upgrade Plan
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-question-circle"></i>
+                            Help & Support
+                        </a>
+                        <a href="index.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link active" onclick="showSection('overview')">
+                            <i class="fas fa-home menu-icon"></i>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('parts')">
+                            <i class="fas fa-cog menu-icon"></i>
+                            My Parts
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('quotes')">
+                            <i class="fas fa-envelope menu-icon"></i>
+                            Quote Requests
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('messages')">
+                            <i class="fas fa-comments menu-icon"></i>
+                            Messages
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Business</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('analytics')">
+                            <i class="fas fa-chart-bar menu-icon"></i>
+                            Analytics
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('billing')">
+                            <i class="fas fa-credit-card menu-icon"></i>
+                            Billing & Plans
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Account</div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('profile')">
+                            <i class="fas fa-user menu-icon"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showSection('settings')">
+                            <i class="fas fa-cog menu-icon"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section class="content-section active" id="overview">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p class="page-subtitle">Welcome back, Global Auto Parts! Here's what's happening with your business.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+12%</div>
+                        </div>
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">New Quotes This Week</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+8%</div>
+                        </div>
+                        <div class="stat-number">1,247</div>
+                        <div class="stat-label">Profile Views</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+23%</div>
+                        </div>
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Response Rate</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="stat-trend trend-down">-2</div>
+                        </div>
+                        <div class="stat-number">1,847</div>
+                        <div class="stat-label">Active Parts Listed</div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3 style="margin-bottom: 1rem; color: #1a202c;">Quick Actions</h3>
+                    <div class="actions-grid">
+                        <a href="#" class="action-btn" onclick="showSection('parts')">
+                            <i class="fas fa-plus"></i>
+                            Add New Part
+                        </a>
+                        <a href="#" class="action-btn" onclick="showSection('quotes')">
+                            <i class="fas fa-envelope-open"></i>
+                            View Quotes
+                        </a>
+                        <a href="#" class="action-btn" onclick="showSection('messages')">
+                            <i class="fas fa-comment"></i>
+                            Check Messages
+                        </a>
+                        <a href="#" class="action-btn" onclick="showSection('profile')">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </a>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Recent Activity</h3>
+                        <a href="#" class="view-all-link">View all</a>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #f81927;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">New quote request for BMW brake pads (5031016810)</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #48bb78;">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Message from UK Auto Spares about delivery</div>
+                            <div class="activity-time">15 minutes ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #f6ad55;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Your profile was viewed 23 times today</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #9f7aea;">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Added 5 new Mercedes parts to inventory</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section class="content-section" id="profile">
+                <div class="page-header">
+                    <h1 class="page-title">My Profile</h1>
+                    <p class="page-subtitle">Manage your company information and public profile</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-building"></i>
+                            Company Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-input" value="Global Auto Parts Ltd" id="companyName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Business Description</label>
+                            <textarea class="form-textarea" id="businessDescription">Premium European automotive parts supplier since 1987. We specialize in genuine and aftermarket parts for BMW, Mercedes-Benz, Audi, and Volkswagen.</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Specializations</label>
+                            <input type="text" class="form-input" value="BMW, Mercedes-Benz, Audi, VW, Engine Parts" id="specializations">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Years in Business</label>
+                            <select class="form-select" id="yearsInBusiness">
+                                <option value="1-5">1-5 years</option>
+                                <option value="6-10">6-10 years</option>
+                                <option value="11-20" selected>11-20 years</option>
+                                <option value="21+">21+ years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Location & Contact
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-input" value="Hauptstraße 123, Hamburg" id="address">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-input" value="Hamburg" id="city">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" id="country">
+                                <option value="DE" selected>Germany</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="FR">France</option>
+                                <option value="IT">Italy</option>
+                                <option value="ES">Spain</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" value="+49 40 1234567" id="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" value="contact@globalautoparts.de" id="email">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-top: 2rem;">
+                    <h3 class="form-title">
+                        <i class="fas fa-image"></i>
+                        Company Logo
+                    </h3>
+                    
+                    <div class="file-upload-area" onclick="document.getElementById('logoUpload').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                        <p>Click to upload your company logo</p>
+                        <small style="color: #a0aec0;">PNG, JPG up to 2MB</small>
+                        <input type="file" id="logoUpload" style="display: none;" accept="image/*" onchange="handleLogoUpload(event)">
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="saveProfile()">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetProfile()">
+                        <i class="fas fa-undo"></i>
+                        Reset
+                    </button>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settings">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Manage your account preferences and notifications</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-bell"></i>
+                            Notification Preferences
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked id="emailQuotes">
+                                Email me about new quote requests
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked id="emailMessages">
+                                Email me about new messages
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="emailMarketing">
+                                Send me marketing updates
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Frequency</label>
+                            <select class="form-select" id="emailFrequency">
+                                <option value="instant" selected>Instant</option>
+                                <option value="daily">Daily digest</option>
+                                <option value="weekly">Weekly summary</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-title">
+                            <i class="fas fa-lock"></i>
+                            Privacy & Security
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-input" placeholder="Enter current password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-input" placeholder="Enter new password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-input" placeholder="Confirm new password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="twoFactor">
+                                Enable two-factor authentication
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="saveSettings()">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </section>
+
+            <!-- Other sections would go here (parts, quotes, messages, etc.) -->
+            <section class="content-section" id="parts">
+                <div class="page-header">
+                    <h1 class="page-title">My Parts</h1>
+                    <p class="page-subtitle">Manage your parts inventory and listings</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-cog" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Parts Management</h3>
+                    <p>This section would contain your parts inventory management tools.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="quotes">
+                <div class="page-header">
+                    <h1 class="page-title">Quote Requests</h1>
+                    <p class="page-subtitle">Respond to customer quote requests</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-envelope" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Quote Requests</h3>
+                    <p>This section would show all incoming quote requests.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="messages">
+                <div class="page-header">
+                    <h1 class="page-title">Messages</h1>
+                    <p class="page-subtitle">Chat with customers and partners</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-comments" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Messages</h3>
+                    <p>This section would contain your messaging interface.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="analytics">
+                <div class="page-header">
+                    <h1 class="page-title">Analytics</h1>
+                    <p class="page-subtitle">Track your business performance</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-chart-bar" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Analytics Dashboard</h3>
+                    <p>This section would show detailed analytics and reports.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="billing">
+                <div class="page-header">
+                    <h1 class="page-title">Billing & Plans</h1>
+                    <p class="page-subtitle">Manage your subscription and billing</p>
+                </div>
+                
+                <div style="text-align: center; padding: 4rem; color: #4a5568;">
+                    <i class="fas fa-credit-card" style="font-size: 4rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                    <h3>Billing Management</h3>
+                    <p>This section would contain billing and subscription management.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation functions
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all menu links
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to corresponding menu link
+            const menuLink = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (menuLink) {
+                menuLink.classList.add('active');
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+            
+            // Close user dropdown
+            document.getElementById('userDropdown').classList.remove('show');
+        }
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // User dropdown toggle
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+
+        // Notifications
+        function toggleNotifications() {
+            document.getElementById('notificationsDropdown').classList.toggle('show');
+        }
+
+        function markAllRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            document.getElementById('notificationCount').textContent = '0';
+            document.getElementById('notificationCount').style.display = 'none';
+        }
+
+        function openNotification(notificationId) {
+            console.log('Opening notification:', notificationId);
+            // Handle notification click
+            event.target.closest('.notification-item').classList.remove('unread');
+            
+            // Update notification count
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            document.getElementById('notificationCount').textContent = unreadCount;
+            if (unreadCount === 0) {
+                document.getElementById('notificationCount').style.display = 'none';
+            }
+        }
+
+        // Profile functions
+        function saveProfile() {
+            const profileData = {
+                companyName: document.getElementById('companyName').value,
+                businessDescription: document.getElementById('businessDescription').value,
+                specializations: document.getElementById('specializations').value,
+                yearsInBusiness: document.getElementById('yearsInBusiness').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                country: document.getElementById('country').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value
+            };
+            
+            console.log('Saving profile:', profileData);
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Profile saved successfully!');
+            }, 500);
+        }
+
+        function resetProfile() {
+            if (confirm('Are you sure you want to reset all changes?')) {
+                // Reset form to original values
+                document.getElementById('companyName').value = 'Global Auto Parts Ltd';
+                document.getElementById('businessDescription').value = 'Premium European automotive parts supplier since 1987. We specialize in genuine and aftermarket parts for BMW, Mercedes-Benz, Audi, and Volkswagen.';
+                document.getElementById('specializations').value = 'BMW, Mercedes-Benz, Audi, VW, Engine Parts';
+                document.getElementById('yearsInBusiness').value = '11-20';
+                document.getElementById('address').value = 'Hauptstraße 123, Hamburg';
+                document.getElementById('city').value = 'Hamburg';
+                document.getElementById('country').value = 'DE';
+                document.getElementById('phone').value = '+49 40 1234567';
+                document.getElementById('email').value = 'contact@globalautoparts.de';
+            }
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                console.log('Uploading logo:', file.name);
+                // Handle file upload
+                alert(`Logo "${file.name}" uploaded successfully!`);
+            }
+        }
+
+        // Settings functions
+        function saveSettings() {
+            const settingsData = {
+                emailQuotes: document.getElementById('emailQuotes').checked,
+                emailMessages: document.getElementById('emailMessages').checked,
+                emailMarketing: document.getElementById('emailMarketing').checked,
+                emailFrequency: document.getElementById('emailFrequency').value,
+                twoFactor: document.getElementById('twoFactor').checked
+            };
+            
+            console.log('Saving settings:', settingsData);
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Settings saved successfully!');
+            }, 500);
+        }
+
+        // Real-time notifications simulation
+        function simulateNewNotification() {
+            const notifications = [
+                {
+                    icon: 'fas fa-envelope',
+                    color: '#f81927',
+                    title: 'New Quote Request',
+                    message: 'Audi transmission parts needed from Spain',
+                    time: 'just now'
+                },
+                {
+                    icon: 'fas fa-comment',
+                    color: '#48bb78',
+                    title: 'New Message',
+                    message: 'Customer responded about pricing',
+                    time: 'just now'
+                },
+                {
+                    icon: 'fas fa-eye',
+                    color: '#f6ad55',
+                    title: 'Profile View',
+                    message: 'Your profile was viewed by a potential customer',
+                    time: 'just now'
+                }
+            ];
+            
+            const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+            
+            // Add to notifications list
+            const notificationsList = document.getElementById('notificationsList');
+            const newNotificationHtml = `
+                <div class="notification-item unread" onclick="openNotification('new-${Date.now()}')">
+                    <div class="notification-content">
+                        <div class="notification-icon" style="background: ${randomNotification.color};">
+                            <i class="${randomNotification.icon}"></i>
+                        </div>
+                        <div class="notification-text">
+                            <div class="notification-title">${randomNotification.title}</div>
+                            <div class="notification-message">${randomNotification.message}</div>
+                            <div class="notification-time">${randomNotification.time}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            notificationsList.insertAdjacentHTML('afterbegin', newNotificationHtml);
+            
+            // Update notification count
+            const currentCount = parseInt(document.getElementById('notificationCount').textContent);
+            document.getElementById('notificationCount').textContent = currentCount + 1;
+            document.getElementById('notificationCount').style.display = 'flex';
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.notifications-btn')) {
+                document.getElementById('notificationsDropdown').classList.remove('show');
+            }
+            if (!event.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+
+        // Simulate new notifications every 30 seconds
+        setInterval(() => {
+            if (Math.random() > 0.7) { // 30% chance
+                simulateNewNotification();
+            }
+        }, 30000);
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show overview section by default
+            showSection('overview');
+            
+            // Update stats periodically
+            setInterval(() => {
+                // Simulate real-time stats updates
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    if (Math.random() > 0.9) { // 10% chance to update
+                        const currentValue = parseInt(stat.textContent.replace(/[^0-9]/g, ''));
+                        const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+                        if (currentValue + change > 0) {
+                            if (stat.textContent.includes('%')) {
+                                stat.textContent = (currentValue + change) + '%';
+                            } else {
+                                stat.textContent = (currentValue + change).toLocaleString();
+                            }
+                        }
+                    }
+                });
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

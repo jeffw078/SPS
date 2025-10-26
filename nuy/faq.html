@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Frequently Asked Questions | Spare Parts Suppliers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            margin-right: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -6px 0 white, 0 6px 0 white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f81927;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            border: 2px solid #f81927;
+            color: #f81927;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        /* Hero Section */
+        .faq-hero {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .faq-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .faq-hero p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-faq {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #f81927;
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.2rem;
+        }
+
+        /* Categories */
+        .faq-categories {
+            background: white;
+            padding: 60px 0;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            background: white;
+            border-color: #f81927;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .category-card.active {
+            background: white;
+            border-color: #f81927;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.2);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f81927, #c53030);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .category-count {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Content */
+        .faq-content {
+            margin-top: 3rem;
+        }
+
+        .faq-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item.active {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-weight: 600;
+            color: #1a202c;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f8fafc;
+        }
+
+        .faq-question.active {
+            background: #f8fafc;
+            color: #f81927;
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+
+        .question-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .question-icon.active {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .faq-answer.active {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            margin-bottom: 1rem;
+        }
+
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .faq-answer ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .faq-answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #f81927, #c53030);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-method {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .contact-method:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .contact-method i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .contact-method h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-method a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .faq-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Search Highlighting */
+        .highlight {
+            background: #fef2e7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #c05621;
+            font-weight: 600;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #4a5568;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                 <a href="index.html" class="logo">                
+                <img src="assets/img/logo.png" alt="">            
+            </a>
+            </a>
+            <ul class="nav-links">
+                <li><a href="search.html">Search Parts</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="#suppliers">Suppliers</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem;">
+                <a href="login.html" class="btn btn-outline">Sign In</a>
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="faq-hero">
+            <div class="container">
+                <h1>How can we help you?</h1>
+                <p>Find answers to commonly asked questions about our platform, services, and how to get the most out of Spare Parts Suppliers.</p>
+                
+                <div class="search-faq">
+                    <input type="text" class="search-input" placeholder="Search for answers..." id="faqSearch">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-categories">
+            <div class="container">
+                <div class="categories-grid">
+                    <div class="category-card active" onclick="showCategory('getting-started')">
+                        <div class="category-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="category-title">Getting Started</div>
+                        <div class="category-count">8 articles</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showCategory('suppliers')">
+                        <div class="category-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="category-title">For Suppliers</div>
+                        <div class="category-count">12 articles</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showCategory('buyers')">
+                        <div class="category-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="category-title">For Buyers</div>
+                        <div class="category-count">10 articles</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showCategory('billing')">
+                        <div class="category-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="category-title">Billing & Plans</div>
+                        <div class="category-count">6 articles</div>
+                    </div>
+                </div>
+
+                <div class="faq-content">
+                    <!-- Getting Started -->
+                    <div class="faq-section" id="getting-started">
+                        <h2 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            Getting Started
+                        </h2>
+                        
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How does Spare Parts Suppliers work?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Spare Parts Suppliers connects automotive parts buyers with verified suppliers worldwide. Simply search for the part you need, browse available suppliers, and connect directly to get quotes.</p>
+                                    <p>We don't handle transactions - we facilitate connections between buyers and suppliers, making it easier to find exactly what you need at competitive prices.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Do I need an account to search for parts?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>No, you can search for parts and view supplier information without creating an account. However, to contact suppliers or request quotes, you'll need to create a free account.</p>
+                                    <p>Creating an account takes less than 2 minutes and gives you access to all platform features.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Is the platform free to use?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Yes, buyers can use the platform completely free. There are no fees for searching, browsing, or contacting suppliers.</p>
+                                    <p>Only suppliers pay subscription fees to list their parts and receive priority notifications about quote requests.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How do I create an account?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Click "Get Started" in the top navigation, then choose your account type (Buyer or Supplier). You can sign up using:</p>
+                                    <ul>
+                                        <li>Email and password</li>
+                                        <li>Google account</li>
+                                        <li>Facebook account</li>
+                                        <li>Apple ID</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Suppliers -->
+                    <div class="faq-section" id="suppliers" style="display: none;">
+                        <h2 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            For Suppliers
+                        </h2>
+                        
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How do I become a supplier on the platform?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>To become a supplier, create an account and select "Supplier" during registration. You'll need to provide:</p>
+                                    <ul>
+                                        <li>Business registration documents</li>
+                                        <li>Tax identification number</li>
+                                        <li>Business address and contact information</li>
+                                        <li>Bank account details (for premium plans)</li>
+                                    </ul>
+                                    <p>Our verification team will review your application within 24-48 hours.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">What's the difference between free and premium supplier accounts?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p><strong>Free Account:</strong></p>
+                                    <ul>
+                                        <li>5 active part listings</li>
+                                        <li>24-hour notification delay</li>
+                                        <li>Basic support via FAQ</li>
+                                    </ul>
+                                    <p><strong>Premium Account:</strong></p>
+                                    <ul>
+                                        <li>Up to 200+ active listings (depending on plan)</li>
+                                        <li>Instant quote notifications</li>
+                                        <li>Priority placement in search results</li>
+                                        <li>Verified supplier badges</li>
+                                        <li>Advanced analytics and reporting</li>
+                                        <li>Priority customer support</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How do I add parts to my inventory?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>After logging into your supplier dashboard, click "Add Parts" and provide:</p>
+                                    <ul>
+                                        <li>Part number (OEM or aftermarket)</li>
+                                        <li>Part description and specifications</li>
+                                        <li>Compatible vehicle models</li>
+                                        <li>Part category (engine, brake, electrical, etc.)</li>
+                                        <li>Part images (optional but recommended)</li>
+                                        <li>Availability and stock levels</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How quickly will I receive quote requests?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Premium suppliers receive instant email notifications when buyers search for their parts. Free suppliers receive notifications with a 24-hour delay.</p>
+                                    <p>Response time is crucial - suppliers who respond within 2 hours have 5x higher conversion rates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Buyers -->
+                    <div class="faq-section" id="buyers" style="display: none;">
+                        <h2 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            For Buyers
+                        </h2>
+                        
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How do I search for parts effectively?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>You can search using several methods:</p>
+                                    <ul>
+                                        <li><strong>Part Number:</strong> Most accurate - use OEM or aftermarket numbers</li>
+                                        <li><strong>Vehicle Info:</strong> Make, model, year (e.g., "BMW 5 Series 2015")</li>
+                                        <li><strong>Part Description:</strong> General terms (e.g., "brake pads", "headlight")</li>
+                                        <li><strong>Advanced Filters:</strong> Brand, category, supplier location, year range</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Are all suppliers verified?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>All suppliers undergo a verification process before joining the platform. However, there are different levels of verification:</p>
+                                    <ul>
+                                        <li><strong>Basic Verified:</strong> Identity and business registration confirmed</li>
+                                        <li><strong>Premium Verified:</strong> Additional financial and reference checks</li>
+                                        <li><strong>Gold/Diamond:</strong> Long-term track record with excellent ratings</li>
+                                    </ul>
+                                    <p>Look for verification badges and ratings when choosing suppliers.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">How do I request quotes from suppliers?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>To request quotes:</p>
+                                    <ul>
+                                        <li>Search for your part and click "Request Quote"</li>
+                                        <li>Login or create a free account if prompted</li>
+                                        <li>Provide details: quantity needed, delivery location, timeline</li>
+                                        <li>Click "Send Quote Requests" to notify all relevant suppliers</li>
+                                    </ul>
+                                    <p>Premium suppliers typically respond within 2 hours, others within 24 hours.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Do I pay through the platform?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>No, we don't handle payments or transactions. Spare Parts Suppliers is a connection platform that helps you find suppliers.</p>
+                                    <p>All negotiations, payments, and shipping arrangements are made directly between you and the supplier. This keeps costs low and gives you maximum flexibility.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Billing & Plans -->
+                    <div class="faq-section" id="billing" style="display: none;">
+                        <h2 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            Billing & Plans
+                        </h2>
+                        
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">What payment methods do you accept?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>We accept the following payment methods:</p>
+                                    <ul>
+                                        <li>Credit Cards: Visa, MasterCard, American Express</li>
+                                        <li>PayPal</li>
+                                        <li>Bank Transfer (for Enterprise plans)</li>
+                                        <li>Apple Pay and Google Pay</li>
+                                    </ul>
+                                    <p>All payments are processed securely through Stripe with 256-bit SSL encryption.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Can I cancel my subscription anytime?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Yes, you can cancel your subscription at any time from your account dashboard. Your plan will remain active until the end of your current billing period.</p>
+                                    <p>If you cancel within 30 days, you're eligible for a full refund under our money-back guarantee.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Do you offer refunds?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Yes, we offer a 30-day money-back guarantee on all paid plans. If you're not satisfied, contact our support team for a full refund.</p>
+                                    <p>Refunds are processed within 5-7 business days to your original payment method.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question" onclick="toggleFaq(this)">
+                                    <span class="question-text">Can I upgrade or downgrade my plan?</span>
+                                    <i class="fas fa-plus question-icon"></i>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Yes, you can change your plan at any time from your account dashboard. Changes take effect immediately:</p>
+                                    <ul>
+                                        <li><strong>Upgrades:</strong> You pay the prorated difference and get instant access to new features</li>
+                                        <li><strong>Downgrades:</strong> Account credit is applied to future billing cycles</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Results Message -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <h3>No results found</h3>
+                        <p>Try adjusting your search terms or browse our categories above.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="container">
+                <h2>Still have questions?</h2>
+                <p>Our support team is here to help you succeed on the platform</p>
+                
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email Support</h4>
+                        <p><a href="mailto:support@sparepartssuppliers.com">support@sparepartssuppliers.com</a></p>
+                        <small>Response within 24 hours</small>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-comments"></i>
+                        <h4>Live Chat</h4>
+                        <p><a href="#" onclick="openLiveChat()">Start Chat</a></p>
+                        <small>Available 9AM-6PM CET</small>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-book"></i>
+                        <h4>Help Center</h4>
+                        <p><a href="#help-center">Browse Articles</a></p>
+                        <small>Comprehensive guides</small>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-video"></i>
+                        <h4>Video Tutorials</h4>
+                        <p><a href="#tutorials">Watch Tutorials</a></p>
+                        <small>Step-by-step guides</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleFaq(element) {
+            const faqItem = element.closest('.faq-item');
+            const answer = faqItem.querySelector('.faq-answer');
+            const icon = element.querySelector('.question-icon');
+            
+            // Close all other FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-answer').classList.remove('active');
+                    item.querySelector('.faq-question').classList.remove('active');
+                    item.querySelector('.question-icon').classList.remove('active');
+                }
+            });
+            
+            // Toggle current item
+            const isActive = faqItem.classList.contains('active');
+            
+            if (isActive) {
+                faqItem.classList.remove('active');
+                answer.classList.remove('active');
+                element.classList.remove('active');
+                icon.classList.remove('active');
+            } else {
+                faqItem.classList.add('active');
+                answer.classList.add('active');
+                element.classList.add('active');
+                icon.classList.add('active');
+            }
+        }
+
+        function showCategory(category) {
+            // Remove active class from all categories
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to clicked category
+            event.target.closest('.category-card').classList.add('active');
+            
+            // Hide all FAQ sections
+            document.querySelectorAll('.faq-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected category
+            const selectedSection = document.getElementById(category);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+            
+            // Close all open FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-answer').classList.remove('active');
+                item.querySelector('.faq-question').classList.remove('active');
+                item.querySelector('.question-icon').classList.remove('active');
+            });
+        }
+
+        function searchFaqs() {
+            const searchTerm = document.getElementById('faqSearch').value.toLowerCase();
+            const allFaqItems = document.querySelectorAll('.faq-item');
+            const allSections = document.querySelectorAll('.faq-section');
+            const noResults = document.getElementById('noResults');
+            let hasResults = false;
+
+            if (searchTerm.length < 2) {
+                // Show all items and hide no results
+                allFaqItems.forEach(item => item.style.display = 'block');
+                allSections.forEach(section => section.style.display = 'block');
+                noResults.style.display = 'none';
+                return;
+            }
+
+            // Hide all sections first
+            allSections.forEach(section => section.style.display = 'none');
+
+            // Search through FAQ items
+            allFaqItems.forEach(item => {
+                const question = item.querySelector('.question-text').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    item.closest('.faq-section').style.display = 'block';
+                    hasResults = true;
+                    
+                    // Highlight search terms
+                    const questionElement = item.querySelector('.question-text');
+                    const highlightedQuestion = questionElement.textContent.replace(
+                        new RegExp(searchTerm, 'gi'), 
+                        match => `<span class="highlight">${match}</span>`
+                    );
+                    questionElement.innerHTML = highlightedQuestion;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show no results if needed
+            noResults.style.display = hasResults ? 'none' : 'block';
+        }
+
+        function openLiveChat() {
+            // Placeholder for live chat integration
+            alert('Live chat would open here. Integrate with your preferred chat solution (Intercom, Zendesk, etc.)');
+        }
+
+        // Add search functionality
+        document.getElementById('faqSearch').addEventListener('input', searchFaqs);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close all open FAQ items
+                document.querySelectorAll('.faq-item.active').forEach(item => {
+                    toggleFaq(item.querySelector('.faq-question'));
+                });
+            }
+        });
+
+        // Initialize with Getting Started category open
+        document.addEventListener('DOMContentLoaded', function() {
+            showCategory('getting-started');
+        });
+    </script>
+</body>
+</html>

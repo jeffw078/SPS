@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Auto Parts - Spare Parts Suppliers</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',Tahoma,Verdana,sans-serif; background:#f8fafc; color:#333; }
+    header { background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); position:fixed; width:100%; top:0; z-index:1000; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; max-width:1200px; margin:0 auto; }
+    .logo img { height:40px; }
+    .nav-links { display:flex; list-style:none; gap:2rem; }
+    .nav-links a { text-decoration:none; color:#333; font-weight:500; transition:color .3s; }
+    .nav-links a:hover { color:#e53e3e; }
+    .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+    .search-section { background:white; padding:120px 0 40px; border-bottom:1px solid #e2e8f0; }
+    .search-header { text-align:center; margin-bottom:2rem; }
+    .results-section { padding:40px 0; }
+    .results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; }
+    .part-card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.1); transition:.3s; border:1px solid transparent; }
+    .part-card:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(0,0,0,0.15); border-color:#e53e3e; }
+    .part-number { font-weight:700; color:#1a202c; font-size:1.2rem; }
+    .part-brand { background:#f7fafc; padding:4px 8px; border-radius:4px; color:#4a5568; font-size:.9rem; }
+    .part-description { color:#4a5568; margin-bottom:1rem; }
+    .suppliers-info { background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1rem; }
+    .suppliers-count { color:#e53e3e; font-weight:600; }
+    .premium-suppliers { font-size:.9rem; color:#4a5568; }
+    .premium-badge { background:linear-gradient(135deg,#e53e3e,#c53030); color:white; padding:2px 6px; border-radius:4px; font-size:.8rem; font-weight:600; }
+    .part-actions { display:flex; gap:.5rem; }
+    .btn-small { padding:8px 16px; border-radius:6px; font-size:.9rem; font-weight:600; cursor:pointer; text-align:center; flex:1; border:none; }
+    .btn-primary-small { background:#e53e3e; color:white; }
+    .btn-outline-small { background:white; border:1px solid #e2e8f0; color:#4a5568; }
+    .btn-outline-small:hover { border-color:#e53e3e; color:#e53e3e; }
+
+    /* modal */
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:2000;}
+    .modal{background:white;border-radius:12px;max-width:500px;width:90%;padding:2rem;box-shadow:0 5px 25px rgba(0,0,0,.25);animation:fadeIn .25s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+    .modal h2{text-align:center;color:#e53e3e;margin-bottom:1rem;}
+    .form-group{margin-bottom:1rem;}
+    .form-group label{font-weight:600;display:block;margin-bottom:.3rem;}
+    .form-group input,.form-group select{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;}
+    .form-check{display:flex;align-items:flex-start;gap:.5rem;margin-top:1rem;}
+    .form-actions{display:flex;gap:1rem;margin-top:1rem;}
+    .btn-send{background:#e53e3e;color:white;flex:1;padding:10px;border:none;border-radius:6px;}
+    .btn-cancel{background:#edf2f7;flex:1;padding:10px;border:none;border-radius:6px;}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="Logo"></a>
+      <ul class="nav-links">
+        <li><a href="#">Search</a></li><li><a href="#">Pricing</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="search-section">
+      <div class="container">
+        <div class="search-header">
+          <h1>Find Your Auto Parts</h1>
+          <p>Mocked KOMATSU parts for layout testing</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="container">
+        <div class="results-grid" id="resultsGrid">
+          <!-- mock data -->
+          <div class="part-card">
+            <div class="part-number">123-4567</div><div class="part-brand">KOMATSU</div>
+            <div class="part-description">Hydraulic Pump Assembly</div>
+            <div class="suppliers-info"><div class="suppliers-count">Price: $1,250</div>
+              <div class="premium-suppliers"><span class="premium-badge">PREMIUM</span> fast suppliers</div></div>
+            <div class="part-actions">
+              <button class="btn-small btn-primary-small">Request Quote</button>
+              <a href="part.html?code=123-4567" class="btn-small btn-outline-small">View Details</a>
+            </div>
+          </div>
+          <div class="part-card">
+            <div class="part-number">789-1011</div><div class="part-brand">KOMATSU</div>
+            <div class="part-description">Fuel Injector Nozzle</div>
+            <div class="suppliers-info"><div class="suppliers-count">Price: $340</div>
+              <div class="premium-suppliers"><span class="premium-badge">PREMIUM</span> fast suppliers</div></div>
+            <div class="part-actions">
+              <button class="btn-small btn-primary-small">Request Quote</button>
+              <a href="part.html?code=789-1011" class="btn-small btn-outline-small">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- popup -->
+  <div id="quoteModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Request a Quote</h2>
+      <form id="quoteForm">
+        <div class="form-group">
+          <label>Part Code</label>
+          <input type="text" id="quotePartCode" name="partCode" readonly>
+        </div>
+        <div class="form-group">
+          <label>Brand</label>
+          <input type="text" id="quoteBrand" name="brand" readonly>
+        </div>
+        <div class="form-group">
+          <label>Quantity Desired</label>
+          <input type="number" id="quoteQty" name="quantity" min="1" required placeholder="Enter number of parts needed">
+        </div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="quoteName" name="name" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="quoteEmail" name="email" required placeholder="Enter your email address">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="quotePhone" name="phone" placeholder="Enter your phone number">
+        </div>
+        <div class="form-group">
+          <label>Country</label>
+          <input type="text" id="quoteCountry" name="country" placeholder="Enter your country">
+        </div>
+        <div class="form-group">
+          <label>State / Region</label>
+          <input type="text" id="quoteRegion" name="region" placeholder="Enter your state or region">
+        </div>
+        <div class="form-group">
+          <label>Preferred Contact Method</label>
+          <select id="quoteContact" name="contactMethod" required>
+            <option value="">Select one...</option>
+            <option>Email</option>
+            <option>Phone</option>
+            <option>WhatsApp</option>
+          </select>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="quoteTerms" name="terms" required>
+          <label for="quoteTerms">I accept the terms and conditions and agree to receive offers for the selected part.</label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-send">Send Request</button>
+          <button type="button" class="btn-cancel" id="closeModal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://kgdszmdcdatbvmjctnkw.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnZHN6bWRjZGF0YnZtamN0bmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MjA5NjksImV4cCI6MjA3NjM5Njk2OX0.FYalhBpdRjORQ0bVkLoRpiCRNT2bMKHeCz9UU5YgvhY";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // abre modal preenchendo part e brand
+    function openQuoteModal(code, brand) {
+      document.getElementById("quotePartCode").value = code;
+      document.getElementById("quoteBrand").value = brand;
+      document.getElementById("quoteModal").style.display = "flex";
+    }
+
+    // fechar modal
+    document.getElementById("closeModal").onclick = () =>
+      document.getElementById("quoteModal").style.display = "none";
+
+    // envio do form ao supabase
+    document.getElementById("quoteForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+  partcode: document.getElementById("quotePartCode").value,
+  brand: document.getElementById("quoteBrand").value,
+  quantity: parseInt(document.getElementById("quoteQty").value),
+  name: document.getElementById("quoteName").value,
+  email: document.getElementById("quoteEmail").value,
+  phone: document.getElementById("quotePhone").value,
+  country: document.getElementById("quoteCountry").value,
+  region: document.getElementById("quoteRegion").value,
+  contactmethod: document.getElementById("quoteContact").value,
+  acceptedterms: document.getElementById("quoteTerms").checked,
+};
+
+      const { error } = await supabase.from("customerleads").insert([data]);
+
+      const modal = document.querySelector(".modal");
+      if (error) {
+        modal.innerHTML = `
+          <h2 style="color:#e53e3e;text-align:center;">Error sending quote</h2>
+          <p style="text-align:center;color:#4a5568;">Please try again later.</p>
+          <button class="btn-cancel" onclick="document.getElementById('quoteModal').style.display='none'">Close</button>
+        `;
+      } else {
+        modal.innerHTML = `
+          <h2 style="color:#16a34a;text-align:center;">Quote Sent!</h2>
+          <p style="text-align:center;color:#4a5568;">Thank you, we’ll connect you with suppliers soon.</p>
+          <button class="btn-send" style="background:#16a34a;" onclick="document.getElementById('quoteModal').style.display='none'">OK</button>
+        `;
+      }
+    });
+
+    // click nos botões de cotação
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-primary-small")) {
+        const card = e.target.closest(".part-card");
+        openQuoteModal(
+          card.querySelector(".part-number").textContent,
+          card.querySelector(".part-brand").textContent
+        );
+      }
+    });
+
+    // #turso START
+    /*
+    document.addEventListener("DOMContentLoaded",()=>{
+      const input=document.getElementById("mainSearch");
+      async function fetchPage(){
+        const res=await fetch(`http://localhost:3001/api/search?q=${encodeURIComponent(term)}`);
+        const data=await res.json();
+        data.rows.forEach(r=>{/* render cards });*/
+    //   }
+    // });
+    // #turso END
+  </script>
+</body>
+</html>

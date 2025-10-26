@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans - Spare Parts Suppliers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            margin-right: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -6px 0 white, 0 6px 0 white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f81927;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-outline {
+            border: 2px solid #f81927;
+            color: #f81927;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        /* Hero Section */
+        .pricing-hero {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .pricing-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .pricing-hero p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #f81927;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .toggle-label.active {
+            color: #f81927;
+        }
+
+        .savings-badge {
+            background: #f81927;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Pricing Cards */
+        .pricing-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.popular {
+            border-color: #f81927;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(229, 62, 62, 0.2);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f81927, #c53030);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .plan-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .price-period {
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: #a0aec0;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .feature-included {
+            background: #48bb78;
+            color: white;
+        }
+
+        .feature-limited {
+            background: #ed8936;
+            color: white;
+        }
+
+        .feature-excluded {
+            background: #e2e8f0;
+            color: #a0aec0;
+        }
+
+        .plan-cta {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .cta-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        .cta-primary:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: #f81927;
+            border: 2px solid #f81927;
+        }
+
+        .cta-secondary:hover {
+            background: #f81927;
+            color: white;
+        }
+
+        /* Enterprise Section */
+        .enterprise-section {
+            background: #1a202c;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .enterprise-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .enterprise-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .enterprise-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .enterprise-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .enterprise-feature {
+            text-align: center;
+        }
+
+        .enterprise-feature i {
+            font-size: 2rem;
+            color: #f81927;
+            margin-bottom: 1rem;
+        }
+
+        .enterprise-feature h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: #f7fafc;
+            padding: 80px 0;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .faq-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .faq-answer {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* Money Back Guarantee */
+        .guarantee-section {
+            background: linear-gradient(135deg, #f81927, #c53030);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .guarantee-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .guarantee-icon {
+            font-size: 4rem;
+            opacity: 0.9;
+        }
+
+        .guarantee-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .guarantee-text p {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+            
+            .enterprise-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+               <a href="index.html" class="logo">                
+                <img src="assets/img/logo.png" alt="">            
+            </a>
+            <ul class="nav-links">
+                <li><a href="search.html">Search Parts</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="#suppliers">Suppliers</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem;">
+                <a href="login.html" class="btn btn-outline">Sign In</a>
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="pricing-hero">
+            <div class="container">
+                <h1>Simple, Transparent Pricing</h1>
+                <p>Choose the perfect plan for your business. Start free, upgrade when you need more. No hidden fees, cancel anytime.</p>
+                
+                <div class="billing-toggle">
+                    <span class="toggle-label active" id="monthlyLabel">Monthly</span>
+                    <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <span class="toggle-label" id="yearlyLabel">
+                        Yearly <span class="savings-badge">Save 20%</span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-section">
+            <div class="container">
+                <div class="pricing-grid">
+                    <!-- FREE Plan -->
+                    <div class="pricing-card">
+                        <div class="plan-header">
+                            <h3 class="plan-name">FREE</h3>
+                            <p class="plan-description">Perfect for testing the platform</p>
+                        </div>
+                        
+                        <div class="plan-price">
+                            <span class="price-amount">$0</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                        
+                        <ul class="plan-features">
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                5 active listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-limited">⚡</span>
+                                24-hour notification delay
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Basic support via FAQ
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Free member badge
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-excluded">✗</span>
+                                Priority listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-excluded">✗</span>
+                                Analytics dashboard
+                            </li>
+                        </ul>
+                        
+                        <a href="register.html?plan=free" class="plan-cta cta-secondary">
+                            Get Started Free
+                        </a>
+                    </div>
+
+                    <!-- STARTER Plan -->
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">Most Popular</div>
+                        <div class="plan-header">
+                            <h3 class="plan-name">STARTER</h3>
+                            <p class="plan-description">Best for small suppliers</p>
+                        </div>
+                        
+                        <div class="plan-price">
+                            <span class="price-original" id="starterOriginal">$23.90</span>
+                            <span class="price-amount" id="starterPrice">$19.90</span>
+                            <span class="price-period" id="starterPeriod">/month</span>
+                        </div>
+                        
+                        <ul class="plan-features">
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                20 premium listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Instant notifications
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                5 featured listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Verified supplier badge
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Email support (7 days)
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Basic analytics
+                            </li>
+                        </ul>
+                        
+                        <a href="register.html?plan=starter" class="plan-cta cta-primary">
+                            Start 30-Day Free Trial
+                        </a>
+                    </div>
+
+                    <!-- PRO Plan -->
+                    <div class="pricing-card">
+                        <div class="plan-header">
+                            <h3 class="plan-name">PRO</h3>
+                            <p class="plan-description">For growing businesses</p>
+                        </div>
+                        
+                        <div class="plan-price">
+                            <span class="price-original" id="proOriginal">$59.90</span>
+                            <span class="price-amount" id="proPrice">$49.90</span>
+                            <span class="price-period" id="proPeriod">/month</span>
+                        </div>
+                        
+                        <ul class="plan-features">
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                50 premium listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                25 featured listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Regional banner (5 countries)
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Gold supplier badge
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Priority support (48h)
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Advanced analytics
+                            </li>
+                        </ul>
+                        
+                        <a href="register.html?plan=pro" class="plan-cta cta-secondary">
+                            Start Free Trial
+                        </a>
+                    </div>
+
+                    <!-- PREMIUM Plan -->
+                    <div class="pricing-card">
+                        <div class="plan-header">
+                            <h3 class="plan-name">PREMIUM</h3>
+                            <p class="plan-description">For established suppliers</p>
+                        </div>
+                        
+                        <div class="plan-price">
+                            <span class="price-original" id="premiumOriginal">$239.90</span>
+                            <span class="price-amount" id="premiumPrice">$199.90</span>
+                            <span class="price-period" id="premiumPeriod">/month</span>
+                        </div>
+                        
+                        <ul class="plan-features">
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                150 premium listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                200 featured listings
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                National banner (20 brands)
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Diamond supplier badge
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Priority support (24h)
+                            </li>
+                            <li>
+                                <span class="feature-icon feature-included">✓</span>
+                                Lead analytics & insights
+                            </li>
+                        </ul>
+                        
+                        <a href="register.html?plan=premium" class="plan-cta cta-secondary">
+                            Start Free Trial
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enterprise Section -->
+        <section class="enterprise-section">
+            <div class="container">
+                <div class="enterprise-content">
+                    <h2>Enterprise Solutions</h2>
+                    <p>Custom solutions for large suppliers and distributors with unique needs</p>
+                    
+                    <div class="enterprise-features">
+                        <div class="enterprise-feature">
+                            <i class="fas fa-infinity"></i>
+                            <h4>Unlimited Listings</h4>
+                            <p>No limits on your inventory</p>
+                        </div>
+                        <div class="enterprise-feature">
+                            <i class="fas fa-code"></i>
+                            <h4>API Access</h4>
+                            <p>Full integration capabilities</p>
+                        </div>
+                        <div class="enterprise-feature">
+                            <i class="fas fa-headset"></i>
+                            <h4>Dedicated Support</h4>
+                            <p>Account manager included</p>
+                        </div>
+                        <div class="enterprise-feature">
+                            <i class="fas fa-globe"></i>
+                            <h4>Global Banners</h4>
+                            <p>Worldwide brand presence</p>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact-sales" class="btn" style="background: white; color: #1a202c; font-size: 1.1rem; padding: 15px 30px;">
+                        Contact Sales Team
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Money Back Guarantee -->
+        <section class="guarantee-section">
+            <div class="container">
+                <div class="guarantee-content">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="guarantee-text">
+                        <h3>30-Day Money Back Guarantee</h3>
+                        <p>Not satisfied? Get a full refund within 30 days, no questions asked.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="faq-header">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Everything you need to know about our pricing and plans</p>
+                </div>
+                
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">How does the free plan work?</div>
+                        <div class="faq-answer">The free plan allows you to list 5 parts with 24-hour notification delay. Perfect for testing our platform before upgrading.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Can I change plans anytime?</div>
+                        <div class="faq-answer">Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately and billing is prorated.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">What's included in instant notifications?</div>
+                        <div class="faq-answer">Premium plans get notified immediately when someone searches for your parts. Free accounts have a 24-hour delay.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Do you offer refunds?</div>
+                        <div class="faq-answer">Yes, we offer a 30-day money-back guarantee on all paid plans. No questions asked.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">What payment methods do you accept?</div>
+                        <div class="faq-answer">We accept all major credit cards, PayPal, and bank transfers for enterprise plans.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Is there a setup fee?</div>
+                        <div class="faq-answer">No setup fees ever. Pay only for your chosen plan, and start with a 30-day free trial on all paid plans.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let isYearly = false;
+
+        function toggleBilling() {
+            isYearly = !isYearly;
+            const toggle = document.getElementById('billingToggle');
+            const monthlyLabel = document.getElementById('monthlyLabel');
+            const yearlyLabel = document.getElementById('yearlyLabel');
+            
+            toggle.classList.toggle('active');
+            
+            if (isYearly) {
+                monthlyLabel.classList.remove('active');
+                yearlyLabel.classList.add('active');
+            } else {
+                monthlyLabel.classList.add('active');
+                yearlyLabel.classList.remove('active');
+            }
+            
+            updatePricing();
+        }
+
+        function updatePricing() {
+            const plans = {
+                starter: { monthly: 19.90, yearly: 15.92 },
+                pro: { monthly: 49.90, yearly: 39.92 },
+                premium: { monthly: 199.90, yearly: 159.92 }
+            };
+
+            Object.keys(plans).forEach(planName => {
+                const price = isYearly ? plans[planName].yearly : plans[planName].monthly;
+                const originalPrice = plans[planName].monthly;
+                const period = isYearly ? '/year' : '/month';
+                
+                document.getElementById(`${planName}Price`).textContent = `$${price.toFixed(2)}`;
+                document.getElementById(`${planName}Period`).textContent = period;
+                
+                if (isYearly) {
+                    document.getElementById(`${planName}Original`).style.display = 'inline';
+                    document.getElementById(`${planName}Original`).textContent = `$${originalPrice}/mo`;
+                } else {
+                    document.getElementById(`${planName}Original`).style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize pricing
+        updatePricing();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add click tracking for plan selection
+        document.querySelectorAll('.plan-cta').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Track which plan was selected
+                const planName = this.closest('.pricing-card').querySelector('.plan-name').textContent;
+                console.log(`Plan selected: ${planName}`);
+                
+                // Add billing cycle to URL if yearly
+                if (isYearly && !this.href.includes('plan=free')) {
+                    const url = new URL(this.href, window.location.origin);
+                    url.searchParams.set('billing', 'yearly');
+                    this.href = url.toString();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

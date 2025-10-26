@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Auto Parts Ltd - Verified Supplier Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #f81927;
+            margin-right: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 -6px 0 white, 0 6px 0 white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f81927;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            border: 2px solid #f81927;
+            color: #f81927;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: #f81927;
+            color: white;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: white;
+            padding: 120px 0 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .breadcrumb-nav {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-nav a {
+            color: #f81927;
+            text-decoration: none;
+        }
+
+        /* Supplier Header */
+        .supplier-header {
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .supplier-info {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .supplier-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f81927, #c53030);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .supplier-details h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .supplier-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .supplier-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a5568;
+        }
+
+        .stat-item i {
+            color: #f81927;
+        }
+
+        .badges-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge.verified {
+            background: #48bb78;
+            color: white;
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, #f81927, #c53030);
+            color: white;
+        }
+
+        .badge.gold {
+            background: linear-gradient(135deg, #f6ad55, #ed8936);
+            color: white;
+        }
+
+        .badge.diamond {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+        }
+
+        .badge-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .badge-btn {
+            padding: 4px 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .badge-btn:hover {
+            border-color: #f81927;
+            color: #f81927;
+        }
+
+        .supplier-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-btn {
+            background: #f81927;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .contact-btn:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f7fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .stars {
+            color: #f6ad55;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        /* Content Section */
+        .content-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #4a5568;
+        }
+
+        .tab-btn.active {
+            color: #f81927;
+            border-bottom: 2px solid #f81927;
+        }
+
+        .tab-content {
+            padding: 2rem;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Parts Grid */
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .part-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+
+        .part-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .part-number {
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .part-description {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .part-price {
+            color: #f81927;
+            font-weight: 600;
+        }
+
+        /* Reviews */
+        .review-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #4a5568;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .supplier-info {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .supplier-stats {
+                justify-content: center;
+            }
+            
+            .content-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .parts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <a href="index.html" class="logo">                
+                <img src="assets/img/logo.png" alt="">            
+            </a>
+            </a>
+            <ul class="nav-links">
+                <li><a href="search.html">Search Parts</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="#suppliers">Suppliers</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem;">
+                <a href="login.html" class="btn btn-outline">Sign In</a>
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="breadcrumb">
+            <div class="container">
+                <nav class="breadcrumb-nav">
+                    <a href="index.html">Home</a> > 
+                    <a href="search.html">Search</a> > 
+                    <a href="#suppliers">Suppliers</a> > 
+                    Global Auto Parts Ltd
+                </nav>
+            </div>
+        </section>
+
+        <section class="supplier-header">
+            <div class="container">
+                <div class="supplier-info">
+                    <div class="supplier-logo">
+                        GAP
+                    </div>
+                    
+                    <div class="supplier-details">
+                        <h1>Global Auto Parts Ltd</h1>
+                        <p class="supplier-subtitle">Premium European automotive parts supplier since 1987</p>
+                        
+                        <div class="supplier-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Hamburg, Germany</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-box"></i>
+                                <span>15,847 Parts Available</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Active since 2018</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-shipping-fast"></i>
+                                <span>Ships Worldwide</span>
+                            </div>
+                        </div>
+                        
+                        <div class="badges-container" id="badgesContainer">
+                            <div class="badge verified">
+                                <i class="fas fa-shield-check"></i>
+                                Verified Supplier
+                            </div>
+                            <div class="badge premium">
+                                <i class="fas fa-crown"></i>
+                                Premium Member
+                            </div>
+                        </div>
+                        
+                        <div class="badge-selector">
+                            <button class="badge-btn" onclick="changeBadge('verified')">Verified</button>
+                            <button class="badge-btn" onclick="changeBadge('premium')">Premium</button>
+                            <button class="badge-btn" onclick="changeBadge('gold')">Gold</button>
+                            <button class="badge-btn" onclick="changeBadge('diamond')">Diamond</button>
+                        </div>
+                    </div>
+                    
+                    <div class="supplier-actions">
+                        <a href="chat.html?supplier=global-auto-parts" class="contact-btn">
+                            <i class="fas fa-comment"></i> Contact Supplier
+                        </a>
+                        
+                        <div class="rating-display">
+                            <div class="stars">
+                                ★★★★★
+                            </div>
+                            <span class="rating-text">4.8 (247 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container" style="display: contents;">
+                <div class="main-content">
+                    <div class="content-tabs">
+                        <button class="tab-btn active" onclick="showTab('parts')">Available Parts</button>
+                        <button class="tab-btn" onclick="showTab('about')">About Company</button>
+                        <button class="tab-btn" onclick="showTab('reviews')">Reviews (247)</button>
+                        <button class="tab-btn" onclick="showTab('certifications')">Certifications</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="parts">
+                            <h3 style="margin-bottom: 1.5rem;">Featured Parts</h3>
+                            <div class="parts-grid">
+                                <div class="part-card">
+                                    <div class="part-number">8K0615301M</div>
+                                    <div class="part-description">Brake Disc Set - Audi A4, A5, Q5</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                                
+                                <div class="part-card">
+                                    <div class="part-number">51117237615</div>
+                                    <div class="part-description">Xenon Headlight Assembly - BMW 5 Series</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                                
+                                <div class="part-card">
+                                    <div class="part-number">A2203202438</div>
+                                    <div class="part-description">Rear Air Spring - Mercedes S-Class</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                                
+                                <div class="part-card">
+                                    <div class="part-number">LR031570</div>
+                                    <div class="part-description">Air Suspension Strut - Range Rover</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                                
+                                <div class="part-card">
+                                    <div class="part-number">04E115561T</div>
+                                    <div class="part-description">Oil Filter Housing - VW Golf/Passat</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                                
+                                <div class="part-card">
+                                    <div class="part-number">5031016810</div>
+                                    <div class="part-description">Brake Pad Set - BMW Front Axle</div>
+                                    <div class="part-price">Request Quote</div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 2rem;">
+                                <a href="search.html?supplier=global-auto-parts" class="btn btn-outline">
+                                    View All 15,847 Parts
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="about">
+                            <h3 style="margin-bottom: 1rem;">Company Description</h3>
+                            <p style="color: #4a5568; line-height: 1.6; margin-bottom: 2rem;">
+                                Global Auto Parts Ltd is a leading supplier of genuine and aftermarket automotive parts for European vehicles. 
+                                Founded in 1987 in Hamburg, Germany, we have built a reputation for quality, reliability, and exceptional customer service. 
+                                Our extensive inventory includes parts for BMW, Mercedes-Benz, Audi, Volkswagen, and other premium European brands.
+                            </p>
+                            
+                            <h4 style="margin-bottom: 1rem;">Specializations</h4>
+                            <ul style="color: #4a5568; margin-bottom: 2rem;">
+                                <li>BMW Original Equipment & Aftermarket Parts</li>
+                                <li>Mercedes-Benz Genuine Components</li>
+                                <li>Audi Performance & Standard Parts</li>
+                                <li>Volkswagen Complete Range</li>
+                                <li>Engine, Transmission & Suspension Systems</li>
+                            </ul>
+                            
+                            <h4 style="margin-bottom: 1rem;">Quality Assurance</h4>
+                            <p style="color: #4a5568; line-height: 1.6;">
+                                All parts undergo rigorous quality control checks. We maintain ISO 9001:2015 certification 
+                                and work directly with OEM manufacturers to ensure authenticity and reliability.
+                            </p>
+                        </div>
+                        
+                        <div class="tab-pane" id="reviews">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div>
+                                        <div class="reviewer-name">Michael Schmidt</div>
+                                        <div class="stars" style="color: #f6ad55;">★★★★★</div>
+                                    </div>
+                                    <div class="review-date">2 days ago</div>
+                                </div>
+                                <div class="review-text">
+                                    Excellent service! Found the exact BMW part I needed and received it within 3 days. 
+                                    Quality is top-notch and customer support was very helpful throughout the process.
+                                </div>
+                            </div>
+                            
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div>
+                                        <div class="reviewer-name">Sarah Johnson</div>
+                                        <div class="stars" style="color: #f6ad55;">★★★★★</div>
+                                    </div>
+                                    <div class="review-date">1 week ago</div>
+                                </div>
+                                <div class="review-text">
+                                    Professional supplier with genuine Mercedes parts. Competitive pricing and fast shipping to the UK. 
+                                    Will definitely order again for our workshop needs.
+                                </div>
+                            </div>
+                            
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div>
+                                        <div class="reviewer-name">Carlos Rodriguez</div>
+                                        <div class="stars" style="color: #f6ad55;">★★★★☆</div>
+                                    </div>
+                                    <div class="review-date">2 weeks ago</div>
+                                </div>
+                                <div class="review-text">
+                                    Good selection of Audi parts. Order took a bit longer than expected but the quality 
+                                    was exactly as described. Great communication throughout.
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 2rem;">
+                                <button class="btn btn-outline">Load More Reviews</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="certifications">
+                            <h3 style="margin-bottom: 1.5rem;">Certifications & Credentials</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
+                                    <i class="fas fa-certificate" style="font-size: 2rem; color: #f81927; margin-bottom: 0.5rem;"></i>
+                                    <h4>ISO 9001:2015</h4>
+                                    <p style="color: #4a5568; font-size: 0.9rem;">Quality Management System</p>
+                                </div>
+                                
+                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
+                                    <i class="fas fa-shield-alt" style="font-size: 2rem; color: #48bb78; margin-bottom: 0.5rem;"></i>
+                                    <h4>Platform Verified</h4>
+                                    <p style="color: #4a5568; font-size: 0.9rem;">Identity & Business Verified</p>
+                                </div>
+                                
+                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
+                                    <i class="fas fa-handshake" style="font-size: 2rem; color: #f6ad55; margin-bottom: 0.5rem;"></i>
+                                    <h4>Authorized Dealer</h4>
+                                    <p style="color: #4a5568; font-size: 0.9rem;">BMW, Mercedes, Audi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <div class="info-card">
+                        <h3>Quick Info</h3>
+                        <div class="info-item">
+                            <span class="info-label">Response Time</span>
+                            <span class="info-value">< 2 hours</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since</span>
+                            <span class="info-value">2018</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Languages</span>
+                            <span class="info-value">English, German</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Shipping</span>
+                            <span class="info-value">Worldwide</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Payment</span>
+                            <span class="info-value">Multiple Options</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>Specialties</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">BMW</span>
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">Mercedes</span>
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">Audi</span>
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">VW</span>
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">Engine Parts</span>
+                            <span style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">Suspension</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>Contact Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Business Hours</span>
+                            <span class="info-value">8AM - 6PM CET</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value">+49 40 1234567</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">Hamburg, Germany</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show the selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function changeBadge(badgeType) {
+            const container = document.getElementById('badgesContainer');
+            
+            const badges = {
+                verified: `
+                    <div class="badge verified">
+                        <i class="fas fa-shield-check"></i>
+                        Verified Supplier
+                    </div>
+                `,
+                premium: `
+                    <div class="badge verified">
+                        <i class="fas fa-shield-check"></i>
+                        Verified Supplier
+                    </div>
+                    <div class="badge premium">
+                        <i class="fas fa-crown"></i>
+                        Premium Member
+                    </div>
+                `,
+                gold: `
+                    <div class="badge verified">
+                        <i class="fas fa-shield-check"></i>
+                        Verified Supplier
+                    </div>
+                    <div class="badge gold">
+                        <i class="fas fa-star"></i>
+                        Gold Member
+                    </div>
+                `,
+                diamond: `
+                    <div class="badge verified">
+                        <i class="fas fa-shield-check"></i>
+                        Verified Supplier
+                    </div>
+                    <div class="badge diamond">
+                        <i class="fas fa-gem"></i>
+                        Diamond Member
+                    </div>
+                `
+            };
+            
+            container.innerHTML = badges[badgeType];
+        }
+
+        // Add click handlers to part cards
+        document.querySelectorAll('.part-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const partNumber = this.querySelector('.part-number').textContent;
+                window.location.href = `part-detail.html?part=${partNumber}&supplier=global-auto-parts`;
+            });
+        });
+
+        // Simulate live updates
+        setInterval(() => {
+            const responseTime = document.querySelector('.info-value');
+            if (responseTime && responseTime.textContent.includes('hours')) {
+                const currentTime = parseInt(responseTime.textContent);
+                if (Math.random() > 0.8) {
+                    responseTime.textContent = `< ${Math.max(1, currentTime - 1)} hours`;
+                }
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
