@@ -378,7 +378,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .choice-btn {
+  font-family: inherit;
   padding: 14px;
+  font-weight: 600;
   font-size: 1.1rem;
   border-radius: 8px;
   border: 2px solid var(--primary);
@@ -1063,12 +1065,7 @@ footer {
   min-height: 80px;
 }
 
-.checkbox-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
+
 
 .btn.btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -1105,27 +1102,20 @@ footer {
   margin-top: 0.6rem;
 }
 
-/* Checkbox inline, alinhado e sem "quebrar" em duas colunas */
-.checkbox-line{
-  display:flex;
-  align-items:flex-start;   /* alinha topo do texto com o checkbox */
-  gap:10px;
-  width:100%;               /* ocupa a linha inteira */
-  margin-top: .5rem;
-}
-.checkbox-line input[type="checkbox"]{
-  flex:0 0 auto;
-  margin-top: 2px;          /* compensa óticamente a altura da fonte */
-}
-.checkbox-line span{
-  flex:1 1 auto;            /* texto ocupa o restante da linha */
-  line-height: 1.35;
-  color: var(--text-dark);
-  word-break: break-word;
+.form-check,
+.checkbox-line input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #f81927; /* cor do tema */
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
 }
 
-/* garante que o bloco do checkbox não seja tratado como "duas colunas" */
-.popup-content form .checkbox-line{
-  /* se alguma .form-row envolver, isso força a linha a ocupar toda a largura */
-  width: 100%;
+.form-check label,
+.checkbox-line label {
+  display: inline;
+  white-space: normal;
+  writing-mode: horizontal-tb;
+  text-align: left;
 }

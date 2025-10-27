@@ -1,141 +1,158 @@
-/* ============================================================
-   LEAD-POPUP.JS - FINAL VERSION (no duplicate submits)
-   ============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-  const SUPABASE_URL = "https://kgdszmdcdatbvmjctnkw.supabase.co";
-  const SUPABASE_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnZHN6bWRjZGF0YnZtamN0bmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MjA5NjksImV4cCI6MjA3NjM5Njk2OX0.FYalhBpdRjORQ0bVkLoRpiCRNT2bMKHeCz9UU5YgvhY";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+/* ========= Lead Popup Logic ========= */
 
-  const popup = document.getElementById("leadPopup");
-  const closeBtn = document.getElementById("closePopup");
+const SUPABASE_URL = "https://kgdszmdcdatbvmjctnkw.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnZHN6bWRjZGF0YnZtamN0bmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MjA5NjksImV4cCI6MjA3NjM5Njk2OX0.FYalhBpdRjORQ0bVkLoRpiCRNT2bMKHeCz9UU5YgvhY";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  /* ------------------ Funções Globais ------------------ */
-  window.openLeadPopup = () => {
+const popup = document.getElementById("leadPopup");
+const closeBtn = document.getElementById("closePopup");
+
+/* ===== Controle de exibição ===== */
+function qs(name) {
+  const p = new URLSearchParams(location.search);
+  return p.get(name);
+}
+
+function openLeadPopup(partName = "") {
+  const isFirstVisit = !localStorage.getItem("popupShown");
+  const force = qs("forcePopup") === "1";
+  const test = localStorage.getItem("showPopupTest") === "true";
+  if (isFirstVisit || force || test) {
     popup.classList.remove("hidden");
     document.body.style.overflow = "hidden";
-    setTimeout(() => closeBtn.classList.remove("hidden"), 1000);
-  };
-
-  function closePopup() {
-    popup.classList.add("hidden");
-    document.body.style.overflow = "auto";
-  }
-  closeBtn?.addEventListener("click", closePopup);
-  popup?.querySelector(".popup-overlay")?.addEventListener("click", closePopup);
-
-  window.chooseUserType = (type) => {
-    document.querySelectorAll(".popup-step").forEach((s) => s.classList.remove("active-step"));
-    document.getElementById(type === "buyer" ? "buyerFormBlock" : "supplierFormBlock").classList.add("active-step");
-  };
-
-  window.goBackToChoice = () => {
-    document.querySelectorAll(".popup-step").forEach((s) => s.classList.remove("active-step"));
+    document
+      .querySelectorAll(".popup-step")
+      .forEach((s) => s.classList.remove("active-step"));
     document.getElementById("stepChoice").classList.add("active-step");
+    document.getElementById("partNameField")?.value &&
+      (document.getElementById("partNameField").value = partName || "");
+    setTimeout(() => closeBtn.classList.remove("hidden"), 4000);
+    localStorage.setItem("popupShown", "true");
+  }
+}
+
+function chooseUserType(type) {
+  document
+    .querySelectorAll(".popup-step")
+    .forEach((s) => s.classList.remove("active-step"));
+  document
+    .getElementById(type === "buyer" ? "buyerFormBlock" : "supplierFormBlock")
+    .classList.add("active-step");
+}
+
+function goBackToChoice() {
+  document
+    .querySelectorAll(".popup-step")
+    .forEach((s) => s.classList.remove("active-step"));
+  document.getElementById("stepChoice").classList.add("active-step");
+}
+
+closeBtn.addEventListener("click", () => closePopup());
+document
+  .querySelector("[data-close-popup]")
+  .addEventListener("click", () => closePopup());
+
+function closePopup() {
+  popup.classList.add("hidden");
+  document.body.style.overflow = "auto";
+}
+
+/* ===== Buyer Submit ===== */
+const buyerForm = document.getElementById("buyerForm");
+const buyerSubmit = document.getElementById("buyerSubmit");
+const buyerStatus = document.getElementById("buyerStatus");
+
+buyerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  buyerStatus.textContent = "";
+  buyerSubmit.classList.add("btn-loading");
+  buyerSubmit.disabled = true;
+
+  const form = e.target;
+  const payload = {
+    email: form.email.value.trim(),
+    part: form.part.value.trim(),
+    quantity: form.quantity.value ? Number(form.quantity.value) : null,
+    urgency: form.urgency?.value?.trim() || "",
+    country: form.country.value.trim(),
+    offers: form.offers?.checked || true,
   };
 
-  /* ------------------ Loader visual ------------------ */
-  const setButtonLoading = (button, loading = true) => {
-    if (loading) {
-      button.dataset.original = button.innerHTML;
-      button.disabled = true;
-      button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending...`;
-    } else {
-      button.disabled = false;
-      button.innerHTML = button.dataset.original;
-    }
+  const { error } = await supabase.from("leadscustomerspopup").insert(payload);
+  buyerSubmit.classList.remove("btn-loading");
+  buyerSubmit.disabled = false;
+
+  if (error) {
+    buyerStatus.className = "inline-status text-error";
+    buyerStatus.textContent = "❌ We couldn't send your request. Please try again.";
+    return;
+  }
+
+  buyerStatus.className = "inline-status text-success";
+  buyerStatus.textContent = "✅ Request sent successfully!";
+  setTimeout(() => {
+    window.location.href = "search.html";
+  }, 1200);
+});
+
+/* ===== Supplier Submit (atualizado) ===== */
+const supplierForm = document.getElementById("supplierForm");
+const supplierSubmit = document.getElementById("supplierSubmit");
+const supplierStatus = document.getElementById("supplierStatus");
+const supplierSuccessMsg = document.getElementById("supplierSuccessMsg");
+
+supplierForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  supplierStatus.textContent = "";
+  supplierSubmit.classList.add("btn-loading");
+  supplierSubmit.disabled = true;
+
+  const form = e.target;
+  const payload = {
+    name: form.name.value.trim(),
+    company: form.company.value.trim(),
+    email: form.email.value.trim(),
+    phone: form.phone.value.trim(),
+    country: form.country.value.trim(),
+    brands: form.brands.value.trim(),
+    integration_preference: form.integration_preference.value.trim(),
+    has_catalog: form.has_catalog.value.trim(),
+    parts_estimate: form.parts_estimate.value
+      ? parseInt(form.parts_estimate.value)
+      : null,
+    goal: form.goal.value.trim(),
+    notes: form.notes.value.trim(),
+    offers: form.offers.checked,
   };
 
-  /* ------------------ Popup Automático ------------------ */
-  const urlParams = new URLSearchParams(window.location.search);
-  const forcePopup = urlParams.get("forcePopup") === "1";
-  const alreadyShown = localStorage.getItem("leadPopupShown");
+  const { error } = await supabase.from("leadssupplierspopup").insert(payload);
 
-  if (!alreadyShown || forcePopup) {
-    setTimeout(() => {
-      openLeadPopup();
-      localStorage.setItem("leadPopupShown", "true");
-    }, 8000); // 8 segundos
+  supplierSubmit.classList.remove("btn-loading");
+  supplierSubmit.disabled = false;
+
+  if (error) {
+    supplierStatus.className = "inline-status text-error";
+    supplierStatus.textContent =
+      "❌ Error saving your registration. Please try again.";
+    console.error("Supabase error:", error);
+    return;
   }
 
-  /* ------------------ FORM COMPRADOR ------------------ */
-  const buyerForm = document.getElementById("buyerForm");
-  if (buyerForm) {
-    // Remove listeners antigos
-    const newBuyerForm = buyerForm.cloneNode(true);
-    buyerForm.parentNode.replaceChild(newBuyerForm, buyerForm);
+  // 🎉 Sucesso visual
+  supplierForm.style.display = "none";
+  supplierSuccessMsg.style.display = "block";
+  supplierStatus.textContent = "";
 
-    let isBuyerSubmitting = false;
-    newBuyerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (isBuyerSubmitting) return;
-      isBuyerSubmitting = true;
+  setTimeout(() => {
+    supplierSuccessMsg.style.display = "none";
+    supplierForm.reset();
+    supplierForm.style.display = "block";
+    closePopup();
+  }, 4000);
+});
 
-      const btn = newBuyerForm.querySelector("button[type='submit']");
-      setButtonLoading(btn, true);
-      const status = document.getElementById("buyerStatus");
-
-      const data = {
-        part: newBuyerForm.part.value.trim(),
-        brand: newBuyerForm.brand.value.trim(),
-        quantity: newBuyerForm.quantity.value.trim(),
-        name: newBuyerForm.name.value.trim(),
-        email: newBuyerForm.email.value.trim(),
-        phone: newBuyerForm.phone.value.trim(),
-        country: newBuyerForm.country.value.trim(),
-        region: newBuyerForm.region.value.trim(),
-        message: newBuyerForm.message.value.trim(),
-        offers: newBuyerForm.offers.checked,
-        created_at: new Date().toISOString(),
-      };
-
-      const { error } = await supabase.from("leadscustomerspopup").insert(data);
-      setButtonLoading(btn, false);
-      isBuyerSubmitting = false;
-
-      status.textContent = error ? "❌ Error sending request." : "✅ Request sent successfully!";
-      status.className = "inline-status " + (error ? "text-error" : "text-success");
-      if (!error) setTimeout(closePopup, 1200);
-    });
-  }
-
-  /* ------------------ FORM FORNECEDOR ------------------ */
-  const supplierForm = document.getElementById("supplierForm");
-  if (supplierForm) {
-    // Remove listeners antigos
-    const newSupplierForm = supplierForm.cloneNode(true);
-    supplierForm.parentNode.replaceChild(newSupplierForm, supplierForm);
-
-    let isSupplierSubmitting = false;
-    newSupplierForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (isSupplierSubmitting) return;
-      isSupplierSubmitting = true;
-
-      const btn = newSupplierForm.querySelector("button[type='submit']");
-      setButtonLoading(btn, true);
-      const status = document.getElementById("supplierStatus");
-
-      const data = {
-        name: newSupplierForm.name.value.trim(),
-        company: newSupplierForm.company.value.trim(),
-        email: newSupplierForm.email.value.trim(),
-        phone: newSupplierForm.phone.value.trim(),
-        country: newSupplierForm.country.value.trim(),
-        website: newSupplierForm.website.value.trim(),
-        brands: newSupplierForm.brands.value.trim(),
-        message: newSupplierForm.message.value.trim(),
-        offers: newSupplierForm.offers.checked,
-        created_at: new Date().toISOString(),
-      };
-
-      const { error } = await supabase.from("leadssupplierspopup").insert(data);
-      setButtonLoading(btn, false);
-      isSupplierSubmitting = false;
-
-      status.textContent = error ? "❌ Error saving data." : "✅ Registered successfully!";
-      status.className = "inline-status " + (error ? "text-error" : "text-success");
-      if (!error) setTimeout(closePopup, 1200);
-    });
-  }
+/* ===== Auto-trigger popup ===== */
+window.addEventListener("load", () => {
+  setTimeout(() => openLeadPopup(), 8000);
 });

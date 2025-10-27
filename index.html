@@ -24,7 +24,7 @@
       <div class="cta-buttons">
        <a href="javascript:void(0)" 
    class="btn btn-primary"
-   onclick="openLeadPopup(); setTimeout(() => chooseUserType('supplier'), 200);">
+   onclick="openLeadPopup(); setTimeout(() => chooseUserType('supplier'), 50);">
    Become a Supplier
 </a>
 
@@ -174,7 +174,7 @@
       
           <a href="javascript:void(0)" 
    class="btn btn-white"
-   onclick="openLeadPopup();">
+   onclick="openLeadPopup(); setTimeout(200);">
    Join us today!
 </a>
       
@@ -185,7 +185,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <div class="container">
+  <!--  <div class="container">
       <div class="footer-content">
         <div class="footer-section">
           <h4>Platform</h4>
@@ -215,7 +215,7 @@
           <a href="#careers">Careers</a>
           <a href="#press">Press</a>
         </div>
-      </div>
+      </div>-->
       <div class="footer-bottom">
         <p>&copy; 2025 Spare Parts Suppliers. All rights reserved. | Privacy Policy | Terms of Service</p>
       </div>
@@ -296,7 +296,7 @@
 
         <label class="checkbox-line">
           <input type="checkbox" name="offers" checked>
-          <span>I agree to receive offers for this part.</span>
+          <span>I agree to receive offers for this brand / part.</span>
         </label>
 
         <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Request</button>
@@ -307,64 +307,84 @@
     </div>
 
     <!-- SUPPLIER FORM -->
-    <div id="supplierFormBlock" class="popup-step" aria-hidden="true">
-      <h2>🚀 Become a Premium Supplier</h2>
-      <p class="text-muted">Start receiving direct quote requests from verified buyers today.</p>
-      <form id="supplierForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Full name*</label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>Company*</label>
-            <input type="text" name="company" required>
-          </div>
-        </div>
+    <!-- STEP 2B: SUPPLIER FORM -->
+<div id="supplierFormBlock" class="popup-step" aria-hidden="true">
+  <h2>🚀 Become a Premium Supplier</h2>
+  <p class="text-muted">Start receiving direct quote requests from verified buyers worldwide.</p>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Email*</label>
-            <input type="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp / Phone*</label>
-            <input type="text" name="phone" required>
-          </div>
-        </div>
+  <form id="supplierForm">
+    <!-- Basic Info -->
+    <input type="text" name="name" placeholder="Full name*" required>
+    <input type="text" name="company" placeholder="Company name*" required>
+    <input type="email" name="email" placeholder="Business email*" required>
+    <input type="tel" name="phone" placeholder="WhatsApp / Phone*" required>
+    <input type="text" name="country" placeholder="Country / Region*" required>
+    <textarea name="brands" placeholder="Which brands or categories do you supply?"></textarea>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Country*</label>
-            <input type="text" name="country" required>
-          </div>
-          <div class="form-group">
-            <label>Website</label>
-            <input type="text" name="website" placeholder="https://">
-          </div>
-        </div>
+    <!-- Integration Preference -->
+    <label class="text-muted" style="font-weight:600;margin-top:10px;">How would you like to connect your parts to our system?</label>
+    <select name="integration_preference" required>
+      <option value="">Select one...</option>
+      <option>Select existing parts already on the website</option>
+      <option>Upload my database (CSV, Excel, etc.)</option>
+      <option>API or automated integration</option>
+      <option>Not sure yet – need guidance</option>
+    </select>
 
-        <div class="form-group">
-          <label>Brands or categories you supply</label>
-          <textarea name="brands" rows="2" placeholder="E.g. Komatsu, Volvo, CAT"></textarea>
-        </div>
+    <!-- Catalog -->
+    <label class="text-muted" style="font-weight:600;margin-top:10px;">Do you already have your parts catalog in digital format?</label>
+    <select name="has_catalog" required>
+      <option value="">Select one...</option>
+      <option>Yes, structured list</option>
+      <option>Partially (some files or photos)</option>
+      <option>No, need help creating it</option>
+    </select>
 
-        <div class="form-group">
-          <label>Message</label>
-          <textarea name="message" rows="3" placeholder="Describe your business or specialization..."></textarea>
-        </div>
+    <!-- Parts Estimate -->
+    <input type="number" name="parts_estimate" placeholder="Approximate number of parts (e.g. 5000)" min="1">
 
-        <label class="checkbox-line">
-          <input type="checkbox" name="offers" checked>
-          <span>Receive quotation requests for these brands for <strong>FREE</strong>?</span>
-        </label>
+    <!-- Goal -->
+    <label class="text-muted" style="font-weight:600;margin-top:10px;">What is your main goal with Spare Parts Suppliers?</label>
+    <select name="goal" required>
+      <option value="">Select one...</option>
+      <option>Receive leads from buyers</option>
+      <option>Promote my brand globally</option>
+      <option>Test market demand</option>
+      <option>Full integration & inventory management</option>
+    </select>
 
-        <button type="submit" class="btn btn-primary"><i class="fas fa-rocket"></i> Join as Supplier</button>
-        <div id="supplierStatus" class="inline-status"></div>
-      </form>
-      <button class="back-btn" onclick="goBackToChoice()">← Back</button>
-      <small class="trust-text">🔒 Your information is safe and confidential.</small>
-    </div>
+    <!-- Notes -->
+    <textarea name="notes" placeholder="Any additional notes or requirements?"></textarea>
+
+    <!-- Offers Checkbox -->
+    <label class="checkbox-line">
+      <span>I want to receive quotation requests for these brands for <strong>FREE</strong>?</span>
+      <input type="checkbox" name="offers" checked>
+    </label>
+
+    <button type="submit" id="supplierSubmit" class="btn btn-primary">Join as Supplier</button>
+    <div id="supplierStatus" class="inline-status"></div>
+  </form>
+
+  <!-- ✅ Success message animation -->
+  <div id="supplierSuccessMsg" style="
+      display:none;
+      text-align:center;
+      padding:1.5rem;
+      border-radius:12px;
+      background:#f0fff4;
+      color:#15803d;
+      animation:fadeIn 0.4s ease;
+  ">
+    <i class="fas fa-check-circle" style="font-size:2rem;margin-bottom:10px;color:#16a34a;"></i>
+    <h3>Registration Received!</h3>
+    <p style="color:#4a5568;">Thank you for joining Spare Parts Suppliers.<br>Our team will contact you shortly to help you connect your parts.</p>
+  </div>
+
+  <button class="back-btn" onclick="goBackToChoice()">← Back</button>
+  <small class="trust-text">🔒 Your information is safe and confidential.</small>
+</div>
+
   </div>
 </div>
 
