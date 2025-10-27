@@ -1,509 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spare Parts Suppliers - Connect. Quote. Supply.</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #fff; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-        /* Header */
-        header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
-        .logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; color: #333; text-decoration: none; }
-        .logo-icon { width: 40px; height: 40px; background: #f81927; margin-right: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .logo-icon::before { content: 'S'; color: white; font-weight: bold; font-size: 24px; }
-        .logo-icon::after { content: ''; position: absolute; width: 30px; height: 2px; background: white; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 -6px 0 white, 0 6px 0 white; }
-        .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
-        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: #f81927; }
-        .cta-buttons { display: flex; gap: 1rem; }
-        .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; font-size: 14px; }
-        .btn-outline { border: 2px solid #f81927; color: #f81927; background: transparent; }
-        .btn-outline:hover { background: #f81927; color: white; }
-        .btn-primary { background: #f81927; color: white; }
-        .btn-primary:hover { background: #c53030; transform: translateY(-2px); }
-
-        /* Hero Section */
-        .hero { background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 120px 0 80px; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #1a202c; }
-        .hero p { font-size: 1.25rem; color: #4a5568; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .search-box { max-width: 600px; margin: 0 auto 3rem; position: relative; }
-        .search-input { width: 100%; padding: 20px 60px 20px 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1.1rem; outline: none; transition: all 0.3s; }
-        .search-input:focus { border-color: #f81927; box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1); }
-        .search-btn { position: absolute; right: 8px; top: 8px; bottom: 8px; background: #f81927; border: none; border-radius: 8px; color: white; cursor: pointer; padding: 0 20px; transition: background 0.3s; }
-        .search-btn:hover { background: #c53030; }
-
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 4rem; }
-        .stat { text-align: center; }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: #f81927; }
-        .stat-label { color: #4a5568; font-weight: 500; }
-
-        /* Features Section */
-        .features { padding: 80px 0; background: white; }
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #1a202c; }
-        .section-subtitle { font-size: 1.2rem; color: #4a5568; max-width: 600px; margin: 0 auto; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; }
-        .feature { text-align: center; padding: 2rem; border-radius: 12px; transition: transform 0.3s; }
-        .feature:hover { transform: translateY(-5px); }
-        .feature-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #f81927, #c53030); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem; }
-        .feature h3 { font-size: 1.5rem; margin-bottom: 1rem; color: #1a202c; }
-        .feature p { color: #4a5568; line-height: 1.6; }
-
-        /* Live Quotes Section */
-        .live-quotes { background: #f7fafc; padding: 80px 0; }
-        .quotes-container { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .quote-item { display: flex; justify-content: between; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; animation: slideInRight 0.5s ease-out; }
-        .quote-item:last-child { border-bottom: none; }
-        .quote-info { flex: 1; }
-        .quote-email { font-weight: 600; color: #1a202c; }
-        .quote-details { font-size: 0.9rem; color: #4a5568; margin-top: 0.25rem; }
-        .quote-time { color: #a0aec0; font-size: 0.8rem; }
-        .quote-cta { background: #f81927; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s; }
-        .quote-cta:hover { background: #c53030; transform: translateY(-1px); }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
-
-        /* CTA Section */
-        .cta-section { background: linear-gradient(135deg, #f81927, #c53030); color: white; padding: 80px 0; text-align: center; }
-        .cta-section h2 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .cta-section p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
-        .btn-white { background: white; color: #f81927; padding: 16px 32px; font-size: 1.1rem; }
-        .btn-white:hover { background: #f7fafc; transform: translateY(-2px); }
-
-        /* Footer */
-        footer { background: #1a202c; color: #a0aec0; padding: 3rem 0 1rem; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-        .footer-section h4 { color: white; margin-bottom: 1rem; }
-        .footer-section a { color: #a0aec0; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: color 0.3s; }
-        .footer-section a:hover { color: #f81927; }
-        .footer-bottom { border-top: 1px solid #2d3748; padding-top: 1rem; text-align: center; }
-
-        /* Notification */
-        .notification { position: fixed; top: 80px; right: 20px; background: white; border: 1px solid #e2e8f0; border-left: 4px solid #f81927; border-radius: 8px; padding: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 1001; animation: slideInRight 0.5s ease-out; max-width: 300px; }
-        .notification.hidden { display: none; }
-        .notification-close { position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #a0aec0; }
-
-        /* ===== POPUP (mantido + melhorado) ===== */
-        .lead-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 3000; }
-        .lead-popup.hidden { display: none; }
-        .popup-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.6); top: 0; left: 0; backdrop-filter: blur(2px); }
-        .popup-content { position: relative; background: #fff; border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 520px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.25); z-index: 3001; animation: slideIn 0.6s ease; }
-        @keyframes slideIn { from { transform: translateY(80px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .popup-step { opacity: 0; visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; transition: opacity 0.5s ease, visibility 0.5s ease; }
-        .popup-step.active-step { opacity: 1; visibility: visible; position: relative; }
-        .close-btn { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #999; background: none; border: none; cursor: pointer; transition: color 0.3s; }
-        .close-btn:hover { color: #f81927; }
-        .popup-content h2 { color: #f81927; font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .popup-content p { color: #4a5568; margin-bottom: 1.5rem; }
-        .popup-content input, .popup-content textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; outline: none; }
-        .popup-content input:focus, .popup-content textarea:focus { border-color: #f81927; box-shadow: 0 0 0 2px rgba(229,62,62,0.1); }
-        .cta-btn { width: 100%; background: linear-gradient(135deg, #f81927, #c53030); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s; }
-        .cta-btn:hover { transform: translateY(-2px); background: #c53030; }
-        .choice-buttons { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
-        .choice-btn { padding: 14px; font-size: 1.05rem; border-radius: 8px; border: 2px solid #f81927; cursor: pointer; background: white; font-weight: 600; transition: all 0.3s; }
-        .choice-btn:hover { background: #f81927; color: white; }
-        .back-btn { margin-top: 10px; background: none; border: none; color: #718096; cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
-        .trust-text { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: #718096; }
-        .inline-status { font-size: 0.95rem; margin-top: 8px; min-height: 20px; }
-        .text-muted { color:#718096; }
-        .text-success { color:#16a34a; font-weight:600; }
-        .text-error { color:#dc2626; font-weight:600; }
-        .btn-loading { position: relative; opacity: .85; pointer-events: none; }
-        .btn-loading::after { content: ""; position: absolute; right: 12px; top: 50%; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; transform: translateY(-50%); animation: spin .7s linear infinite; }
-        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spare Parts Suppliers - Connect. Quote. Supply.</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <a href="#" class="logo">
-                <img src="assets/img/logo.png" alt="">
-            </a>
-            <ul class="nav-links">
-                <li><a href="search.html">Search Parts</a></li>
-                <li><a href="#how-it-works">How it Works</a></li>
-                <li><a href="#suppliers">Brands</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-            </ul>
-            <div class="cta-buttons">
-                <!-- <a href="#login" class="btn btn-outline">Sign In</a> -->
-                <a href="#register" class="btn btn-primary">Become a Supplier</a>
-            </div>
-            <button class="mobile-menu">
-                <i class="fas fa-bars"></i>
-            </button>
-        </nav>
-    </header>
+  <!-- HEADER -->
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo"><img src="assets/img/logo.png" alt=""></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#how-it-works">How it Works</a></li>
+        <li><a href="search.html" class="btn btn-primary">Search Parts</a></li>
+        <li><a href="brands.html">Brands</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+      </ul>
+      <div class="cta-buttons">
+       <a href="javascript:void(0)" 
+   class="btn btn-primary"
+   onclick="openLeadPopup(); setTimeout(() => chooseUserType('supplier'), 200);">
+   Become a Supplier
+</a>
 
-    <div class="notification hidden" id="notification">
-        <button class="notification-close" onclick="closeNotification()">&times;</button>
-        <strong>🔥 New Quote Request!</strong><br>
-        <small>BMW brake pads needed in Germany - 2 minutes ago</small>
-    </div>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Find Auto Parts Worldwide</h1>
-                <p>Connect with verified suppliers globally. Get instant quotes for any automotive part. No middleman, direct contact.</p>
-                
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Enter part number, brand or description" id="partSearch">
-                    <button class="search-btn" onclick="searchParts()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
 
-                <div class="stats">
-                    <div class="stat"><div class="stat-number">50K+</div><div class="stat-label">Verified Suppliers</div></div>
-                    <div class="stat"><div class="stat-number">2M+</div><div class="stat-label">Parts Available</div></div>
-                    <div class="stat"><div class="stat-number">180+</div><div class="stat-label">Countries</div></div>
-                    <div class="stat"><div class="stat-number">$2.5B</div><div class="stat-label">Parts Quoted</div></div>
-                </div>
-            </div>
-        </section>
+      </div>
+      <button class="mobile-menu"><i class="fas fa-bars"></i></button>
+    </nav>
+  </header>
 
-        <section class="features" id="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">How It Works</h2>
-                    <p class="section-subtitle">Simple, fast, and effective. Connect with the right suppliers in just a few clicks.</p>
-                </div>
-                
-                <div class="features-grid">
-                    <div class="feature">
-                        <div class="feature-icon"><i class="fas fa-search"></i></div>
-                        <h3>Search & Find</h3>
-                        <p>Enter any part number or description. Our AI matches you with verified suppliers who have that exact part in stock.</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                        <h3>Instant Quotes</h3>
-                        <p>Premium suppliers get notified immediately. Receive competitive quotes within hours, not days.</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon"><i class="fas fa-handshake"></i></div>
-                        <h3>Direct Contact</h3>
-                        <p>Chat directly with suppliers, negotiate prices, arrange shipping. No middleman fees or commissions.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <div class="mobile-nav">
+    <a href="index.html">Home</a>
+    <a href="index.html#how-it-works">How it Works</a>
+    <a href="search.html" class="btn btn-primary">Search Parts</a>
+    <a href="brands.html">Brands</a>
+    <a href="faq.html">FAQ</a>
+      
+  </div>
+  <div class="mobile-overlay"></div>
 
-        <section class="live-quotes" id="live-quotes">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Live Quote Requests</h2>
-                    <p class="section-subtitle">See what parts are being requested right now. Join thousands of suppliers making deals daily.</p>
-                </div>
-                
-                <div class="quotes-container" id="quotesContainer"></div>
-                
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="#register" class="btn btn-primary">Start Supplying Now</a>
-                </div>
-            </div>
-        </section>
+  <main>
+    <!-- HERO SECTION (Gray background + Search + Stats) -->
+    <section class="hero-gray">
+      <div class="container">
+        <h1>Search Auto Parts Worldwide</h1>
+        <p>Find exactly what you need from our global network of verified suppliers.</p>
 
-        <section class="cta-section">
-            <div class="container">
-                <h2>Ready to Start?</h2>
-                <p>Join 50,000+ suppliers and mechanics already using our platform</p>
-                <a href="#register" class="btn btn-white">Get Started Free - No Credit Card Required</a>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Platform</h4>
-                    <a href="#search">Search Parts</a>
-                    <a href="#suppliers">Find Suppliers</a>
-                    <a href="#pricing">Pricing</a>
-                    <a href="#api">API Access</a>
-                </div>
-                <div class="footer-section">
-                    <h4>For Suppliers</h4>
-                    <a href="#register">Become a Supplier</a>
-                    <a href="#dashboard">Supplier Dashboard</a>
-                    <a href="#analytics">Analytics</a>
-                    <a href="#support">24/7 Support</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="#faq">FAQ</a>
-                    <a href="#blog">Blog</a>
-                    <a href="#guides">User Guides</a>
-                    <a href="#case-studies">Case Studies</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <a href="#about">About Us</a>
-                    <a href="#contact">Contact</a>
-                    <a href="#careers">Careers</a>
-                    <a href="#press">Press</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Spare Parts Suppliers. All rights reserved. | Privacy Policy | Terms of Service</p>
-            </div>
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Enter part number, brand or description" id="partSearch">
+          <button class="search-btn" onclick="searchParts()">
+            <i class="fas fa-search"></i>
+          </button>
         </div>
-    </footer>
 
-    <script>
-        /* ===== Conteúdo antigo (quotes/notification/search) mantido ===== */
-        const mockQuotes = [
-            { email: "mech***@gmail.com", parts: "4 parts BMW 523i", country: "Germany", time: "2 min ago" },
-            { email: "auto***@hotmail.com", parts: "Brake pads Toyota", country: "USA", time: "5 min ago" },
-            { email: "repa***@yahoo.com", parts: "Engine parts VW", country: "Brazil", time: "8 min ago" },
-            { email: "shop***@outlook.com", parts: "Suspension Ford", country: "Canada", time: "12 min ago" },
-            { email: "serv***@gmail.com", parts: "Transmission Audi", country: "UK", time: "15 min ago" },
-            { email: "garage***@mail.com", parts: "Headlight Mercedes", country: "France", time: "18 min ago" },
-            { email: "tech***@email.com", parts: "Air filter Honda", country: "Japan", time: "22 min ago" },
-            { email: "work***@company.com", parts: "Oil pump Volvo", country: "Sweden", time: "25 min ago" }
-        ];
-        function populateQuotes() {
-            const container = document.getElementById('quotesContainer');
-            container.innerHTML = '';
-            const displayQuotes = mockQuotes.slice(0, 6);
-            displayQuotes.forEach((quote, index) => {
-                const quoteElement = document.createElement('div');
-                quoteElement.className = 'quote-item';
-                quoteElement.style.animationDelay = `${index * 0.1}s`;
-                quoteElement.innerHTML = `
-                    <div class="quote-info">
-                        <div class="quote-email">${quote.email}</div>
-                        <div class="quote-details">${quote.parts} • ${quote.country}</div>
-                        <div class="quote-time">${quote.time}</div>
-                    </div>
-                    <a href="#register" class="quote-cta">Start Supplying</a>`;
-                container.appendChild(quoteElement);
-            });
-        }
-        function shuffleQuotes() {
-            for (let i = mockQuotes.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [mockQuotes[i], mockQuotes[j]] = [mockQuotes[j], mockQuotes[i]];
-            }
-            const timeOptions = ["just now", "1 min ago", "3 min ago", "7 min ago", "12 min ago", "16 min ago", "21 min ago", "28 min ago"];
-            mockQuotes.forEach((quote, index) => { quote.time = timeOptions[index] || `${Math.floor(Math.random() * 60)} min ago`; });
-            populateQuotes();
-        }
-        populateQuotes();
-        setInterval(shuffleQuotes, 8000);
-
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            notification.classList.remove('hidden');
-            setTimeout(() => notification.classList.add('hidden'), 5000);
-        }
-        function closeNotification() { document.getElementById('notification').classList.add('hidden'); }
-        setInterval(() => { if (Math.random() > 0.7) showNotification(); }, 15000);
-
-        function searchParts() {
-            const searchTerm = document.getElementById('partSearch').value;
-            if (searchTerm.trim()) window.location.href = `#search?q=${encodeURIComponent(searchTerm)}`;
-        }
-        document.getElementById('partSearch').addEventListener('keypress', e => { if (e.key === 'Enter') searchParts(); });
-        document.getElementById('partSearch').addEventListener('input', e => { if (e.target.value.length > 2) console.log('Autocomplete search for:', e.target.value); });
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
-    </script>
-
-    <!-- 🌎 GLOBAL LEAD POPUP (mantido + melhorado) -->
-    <div id="leadPopup" class="lead-popup hidden" aria-modal="true" role="dialog">
-      <div class="popup-overlay" data-close-popup></div>
-      <div class="popup-content">
-        <button id="closePopup" class="close-btn hidden" aria-label="Close">&times</button>
-
-        <!-- STEP 1: USER TYPE -->
-        <div id="stepChoice" class="popup-step active-step">
-          <h2>🚗 Let's Connect You Better!</h2>
-          <p>Are you looking to <strong>buy auto parts</strong> or <strong>sell as a supplier</strong>?</p>
-          <div class="choice-buttons">
-            <button class="choice-btn" onclick="chooseUserType('buyer')"><i class="fas fa-shopping-cart"></i> I'm a Buyer</button>
-            <button class="choice-btn" onclick="chooseUserType('supplier')"><i class="fas fa-truck-loading"></i> I'm a Supplier</button>
+        <div class="stats grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 3rem;">
+          <div class="stat">
+            <div class="stat-number" style="font-weight:600;">50K+</div>
+            <div class="stat-label">Verified Suppliers</div>
           </div>
-          <small class="trust-text">Choose your role to continue</small>
-        </div>
-
-        <!-- STEP 2A: BUYER FORM -->
-        <div id="buyerFormBlock" class="popup-step" aria-hidden="true">
-          <h2>💬 Request a Quote</h2>
-          <p class="text-muted">Get the best offers for your part in minutes — no sign-up needed.</p>
-          <form id="buyerForm">
-            <input type="email" name="email" placeholder="Your email*" required>
-            <input type="text" name="part" id="partNameField" placeholder="Part number or description*" required>
-            <input type="number" name="quantity" placeholder="Quantity (optional)">
-            <input type="text" name="urgency" placeholder="Urgency or needed by (optional)">
-            <input type="text" name="country" placeholder="Country / Region*" required>
-            <label class="checkbox-line">
-              <span>Receive offers from suppliers subscribed on <strong>SparePartsSuppliers</strong>?</span>
-              <input type="checkbox" name="offers" checked>
-            </label>
-            <button type="submit" id="buyerSubmit" class="cta-btn">📩 Submit Request</button>
-            <div id="buyerStatus" class="inline-status"></div>
-          </form>
-          <button class="back-btn" onclick="goBackToChoice()">← Back</button>
-          <small class="trust-text">🔒 Your information is safe and confidential.</small>
-        </div>
-
-        <!-- STEP 2B: SUPPLIER FORM -->
-        <div id="supplierFormBlock" class="popup-step" aria-hidden="true">
-          <h2>🚀 Become a Premium Supplier</h2>
-          <p class="text-muted">Start receiving direct quote requests from verified buyers today.</p>
-          <form id="supplierForm">
-            <input type="text" name="name" placeholder="Full name*" required>
-            <input type="text" name="company" placeholder="Company name*" required>
-            <input type="email" name="email" placeholder="Business email*" required>
-            <input type="tel" name="phone" placeholder="WhatsApp / Phone*" required>
-            <input type="text" name="country" placeholder="Country / Region*" required>
-            <textarea name="brands" placeholder="Which brands or categories do you supply?"></textarea>
-            <label class="checkbox-line">
-              <span>Receive quotation requests for these brands for <strong>FREE</strong>?</span>
-              <input type="checkbox" name="offers" checked>
-            </label>
-            <button type="submit" id="supplierSubmit" class="cta-btn">🚀 Join as Supplier</button>
-            <div id="supplierStatus" class="inline-status"></div>
-          </form>
-          <button class="back-btn" onclick="goBackToChoice()">← Back</button>
-          <small class="trust-text">🔒 Your information is safe and confidential.</small>
+          <div class="stat">
+            <div class="stat-number" style="font-weight:600;">2M+</div>
+            <div class="stat-label">Parts Available</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" style="font-weight:600;">180+</div>
+            <div class="stat-label">Countries</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" style="font-weight:600;">$2.5B</div>
+            <div class="stat-label">Parts Quoted</div>
+          </div>
         </div>
       </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="features">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Just 3 Steps to Get Your Quote</h2>
+          <p class="section-subtitle">Getting parts has never been easier.</p>
+        </div>
+
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Search Your Part</h3>
+            <p>Enter the part number or description. Our database finds exact and compatible matches instantly.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Get Quotes</h3>
+            <p>Receive instant responses from verified suppliers — all in one place, no endless calls or emails.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Connect & Order</h3>
+            <p>Contact suppliers directly, negotiate your deal, and finalize delivery details in minutes.</p>
+          </div>
+        </div>
+
+<div class="typing-section">
+  <span class="fixed-part">Connect, Quote and...</span>
+  <span class="alt-part">
+    <span>Order</span>
+    <span>Supply</span>
+  </span>
+</div>
+
+
+
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SLIDER -->
+    <section class="testimonials" style="background:#fff;padding:80px 0;">
+      <div class="container text-center">
+        <div class="section-header">
+          <h2 class="section-title">What Our Users Say</h2>
+          <p class="section-subtitle">Real experiences from companies using our platform.</p>
+        </div>
+
+        <div class="testimonial-slider" id="testimonialSlider" style="overflow:hidden; position:relative; max-width:900px; margin:0 auto;">
+          <div class="slider-track" style="display:flex; gap:2rem; transition:transform 0.6s ease;">
+            <div class="card" style="min-width:300px; flex:0 0 300px;">
+              <i class="fas fa-quote-left text-primary" style="font-size:2rem;"></i>
+              <p>"SparePartsSuppliers transformed how we source parts. We save hours every week."</p>
+              <div style="margin-top:0.5rem;">
+                ⭐⭐⭐⭐⭐
+              </div>
+              <strong>— AutoPartsCo, Germany</strong>
+            </div>
+            <div class="card" style="min-width:300px; flex:0 0 300px;">
+              <i class="fas fa-quote-left text-primary" style="font-size:2rem;"></i>
+              <p>"Getting quotes from verified suppliers is now effortless. Excellent interface!"</p>
+              <div style="margin-top:0.5rem;">
+                ⭐⭐⭐⭐☆
+              </div>
+              <strong>— GlobalMotors, USA</strong>
+            </div>
+            <div class="card" style="min-width:300px; flex:0 0 300px;">
+              <i class="fas fa-quote-left text-primary" style="font-size:2rem;"></i>
+              <p>"Fast, reliable and transparent. We found our trusted suppliers here."</p>
+              <div style="margin-top:0.5rem;">
+                ⭐⭐⭐⭐⭐
+              </div>
+              <strong>— AutoLink, Brazil</strong>
+            </div>
+            <div class="card" style="min-width:300px; flex:0 0 300px;">
+              <i class="fas fa-quote-left text-primary" style="font-size:2rem;"></i>
+              <p>"Best platform for connecting with international part distributors!"</p>
+              <div style="margin-top:0.5rem;">
+                ⭐⭐⭐⭐⭐
+              </div>
+              <strong>— EuroParts Ltd, UK</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Start?</h2>
+        <p>Join 50,000+ suppliers and mechanics already using our platform</p>
+      
+          <a href="javascript:void(0)" 
+   class="btn btn-white"
+   onclick="openLeadPopup();">
+   Join us today!
+</a>
+      
+      
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Platform</h4>
+          <a href="search.html">Search Parts</a>
+          <a href="brands.html">Find Suppliers</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#api">API Access</a>
+        </div>
+        <div class="footer-section">
+          <h4>For Suppliers</h4>
+          <a href="#register">Become a Supplier</a>
+          <a href="#dashboard">Supplier Dashboard</a>
+          <a href="#analytics">Analytics</a>
+          <a href="#support">24/7 Support</a>
+        </div>
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <a href="faq.html">FAQ</a>
+          <a href="#blog">Blog</a>
+          <a href="#guides">User Guides</a>
+          <a href="#case-studies">Case Studies</a>
+        </div>
+        <div class="footer-section">
+          <h4>Company</h4>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact</a>
+          <a href="#careers">Careers</a>
+          <a href="#press">Press</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Spare Parts Suppliers. All rights reserved. | Privacy Policy | Terms of Service</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- LEAD POPUP ATUALIZADO -->
+<div id="leadPopup" class="lead-popup hidden" aria-modal="true" role="dialog">
+  <div class="popup-overlay" data-close-popup></div>
+  <div class="popup-content" style="max-height:90vh;overflow-y:auto;">
+    <button id="closePopup" class="close-btn hidden" aria-label="Close">&times;</button>
+
+    <!-- STEP 1 -->
+    <div id="stepChoice" class="popup-step active-step">
+      <h2>🚗 Let's Connect You Better?!</h2>
+      <p>Are you looking to <strong>buy auto parts</strong> or <strong>sell as a supplier</strong>?</p>
+      <div class="choice-buttons">
+        <button class="choice-btn" onclick="chooseUserType('buyer')">I'm a Buyer</button>
+        <button class="choice-btn" onclick="chooseUserType('supplier')">I'm a Supplier</button>
+      </div>
+      <small class="trust-text">Choose your role to continue</small>
+      <small class="trust-text">🥇 Fill the form for the best experience.</small>
     </div>
 
-    <script>
-      /* ====== Supabase client ====== */
-      const SUPABASE_URL = "https://kgdszmdcdatbvmjctnkw.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnZHN6bWRjZGF0YnZtamN0bmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MjA5NjksImV4cCI6MjA3NjM5Njk2OX0.FYalhBpdRjORQ0bVkLoRpiCRNT2bMKHeCz9UU5YgvhY";
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!-- BUYER FORM -->
+    <div id="buyerFormBlock" class="popup-step" aria-hidden="true">
+      <h2>💬 Request a Quote</h2>
+      <p class="text-muted">Get the best offers for your part in minutes — no sign-up needed.</p>
+      <form id="buyerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Part number or description*</label>
+            <input type="text" name="part" required>
+          </div>
+          <div class="form-group">
+            <label>Brand*</label>
+            <input type="text" name="brand" required>
+          </div>
+        </div>
 
-      /* ====== Popup logic (first-visit + test bypass) ====== */
-      let userType = null;
-      const popup = document.getElementById("leadPopup");
-      const closeBtn = document.getElementById("closePopup");
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantity*</label>
+            <input type="number" name="quantity" required>
+          </div>
+          <div class="form-group">
+            <label>Country*</label>
+            <input type="text" name="country" required>
+          </div>
+        </div>
 
-      function qs(name){const p=new URLSearchParams(location.search);return p.get(name);}
-      function openLeadPopup(partName = "") {
-        // primeira visita OU forçar via ?forcePopup=1 OU experimento localStorage
-        const isFirstVisit = !localStorage.getItem("popupShown");
-        const force = qs('forcePopup') === '1';
-        const test = localStorage.getItem("showPopupTest") === "true";
-        if (isFirstVisit || force || test) {
-          popup.classList.remove("hidden");
-          document.body.style.overflow = "hidden";
-          document.querySelectorAll('.popup-step').forEach(s => s.classList.remove('active-step'));
-          document.getElementById("stepChoice").classList.add("active-step");
-          document.getElementById("partNameField")?.value && (document.getElementById("partNameField").value = partName || "");
-          // botão fechar após alguns segundos para UX
-          setTimeout(() => closeBtn.classList.remove("hidden"), 4000);
-          localStorage.setItem("popupShown", "true");
-        }
-      }
-      function chooseUserType(type) {
-        userType = type;
-        document.querySelectorAll('.popup-step').forEach(s => s.classList.remove('active-step'));
-        document.getElementById(type === "buyer" ? "buyerFormBlock" : "supplierFormBlock").classList.add("active-step");
-      }
-      function goBackToChoice() {
-        userType = null;
-        document.querySelectorAll('.popup-step').forEach(s => s.classList.remove('active-step'));
-        document.getElementById("stepChoice").classList.add("active-step");
-      }
-      closeBtn.addEventListener("click", () => closePopup());
-      document.querySelector('[data-close-popup]').addEventListener('click', () => closePopup());
-      function closePopup(){
-        popup.classList.add("hidden");
-        document.body.style.overflow = "auto";
-      }
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name*</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Email*</label>
+            <input type="email" name="email" required>
+          </div>
+        </div>
 
-      /* ====== Buyer submit ====== */
-      const buyerForm = document.getElementById("buyerForm");
-      const buyerSubmit = document.getElementById("buyerSubmit");
-      const buyerStatus = document.getElementById("buyerStatus");
-      buyerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        buyerStatus.textContent = "";
-        buyerSubmit.classList.add("btn-loading");
-        buyerSubmit.disabled = true;
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone*</label>
+            <input type="text" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label>Region</label>
+            <input type="text" name="region">
+          </div>
+        </div>
 
-        const form = e.target;
-        const payload = {
-          email: form.email.value.trim(),
-          part: form.part.value.trim(),
-          quantity: form.quantity.value ? Number(form.quantity.value) : null,
-          urgency: form.urgency.value.trim(),
-          country: form.country.value.trim(),
-          offers: form.offers.checked
-        };
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" rows="3" placeholder="Add any details about your request..."></textarea>
+        </div>
 
-        const { error } = await supabase.from("leadscustomerspopup").insert(payload);
-        buyerSubmit.classList.remove("btn-loading");
-        buyerSubmit.disabled = false;
+        <label class="checkbox-line">
+          <input type="checkbox" name="offers" checked>
+          <span>I agree to receive offers for this part.</span>
+        </label>
 
-        if (error) {
-          buyerStatus.className = "inline-status text-error";
-          buyerStatus.textContent = "❌ We couldn't send your request. Please try again.";
-          return;
-        }
-        buyerStatus.className = "inline-status text-success";
-        buyerStatus.textContent = "✅ Request sent successfully!";
-        setTimeout(() => { window.location.href = "search.html"; }, 1200);
-      });
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Request</button>
+        <div id="buyerStatus" class="inline-status"></div>
+      </form>
+      <button class="back-btn" onclick="goBackToChoice()">← Back</button>
+      <small class="trust-text">🔒 Your information is safe and confidential.</small>
+    </div>
 
-      /* ====== Supplier submit ====== */
-      const supplierForm = document.getElementById("supplierForm");
-      const supplierSubmit = document.getElementById("supplierSubmit");
-      const supplierStatus = document.getElementById("supplierStatus");
-      supplierForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        supplierStatus.textContent = "";
-        supplierSubmit.classList.add("btn-loading");
-        supplierSubmit.disabled = true;
+    <!-- SUPPLIER FORM -->
+    <div id="supplierFormBlock" class="popup-step" aria-hidden="true">
+      <h2>🚀 Become a Premium Supplier</h2>
+      <p class="text-muted">Start receiving direct quote requests from verified buyers today.</p>
+      <form id="supplierForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full name*</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Company*</label>
+            <input type="text" name="company" required>
+          </div>
+        </div>
 
-        const form = e.target;
-        const payload = {
-          name: form.name.value.trim(),
-          company: form.company.value.trim(),
-          email: form.email.value.trim(),
-          phone: form.phone.value.trim(),
-          country: form.country.value.trim(),
-          brands: form.brands.value.trim(),
-          offers: form.offers.checked
-        };
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email*</label>
+            <input type="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp / Phone*</label>
+            <input type="text" name="phone" required>
+          </div>
+        </div>
 
-        const { error } = await supabase.from("leadssupplierspopup").insert(payload);
-        supplierSubmit.classList.remove("btn-loading");
-        supplierSubmit.disabled = false;
+        <div class="form-row">
+          <div class="form-group">
+            <label>Country*</label>
+            <input type="text" name="country" required>
+          </div>
+          <div class="form-group">
+            <label>Website</label>
+            <input type="text" name="website" placeholder="https://">
+          </div>
+        </div>
 
-        if (error) {
-          supplierStatus.className = "inline-status text-error";
-          supplierStatus.textContent = "❌ Error saving your registration. Please try again.";
-          return;
-        }
-        supplierStatus.className = "inline-status text-success";
-        supplierStatus.textContent = "🎉 Registration successful!";
-        setTimeout(() => { closePopup(); }, 1200);
-      });
+        <div class="form-group">
+          <label>Brands or categories you supply</label>
+          <textarea name="brands" rows="2" placeholder="E.g. Komatsu, Volvo, CAT"></textarea>
+        </div>
 
-      // Auto-trigger após 8s (mantido), com primeira-visita / teste
-      window.addEventListener("load", () => {
-        setTimeout(() => openLeadPopup(), 8000);
-      });
-    </script>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" rows="3" placeholder="Describe your business or specialization..."></textarea>
+        </div>
+
+        <label class="checkbox-line">
+          <input type="checkbox" name="offers" checked>
+          <span>Receive quotation requests for these brands for <strong>FREE</strong>?</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary"><i class="fas fa-rocket"></i> Join as Supplier</button>
+        <div id="supplierStatus" class="inline-status"></div>
+      </form>
+      <button class="back-btn" onclick="goBackToChoice()">← Back</button>
+      <small class="trust-text">🔒 Your information is safe and confidential.</small>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/global.js"></script>
+  <script src="assets/js/index.js"></script>
+  <script src="assets/js/lead-popup.js"></script>
+  <script>
+
+  const track = document.querySelector("#testimonialSlider .slider-track");
+  let isDown = false, startX, scrollLeft, offset = 0;
+
+  // Loop infinito suave
+  function loopSlider() {
+    offset -= 1;
+    if (Math.abs(offset) >= track.scrollWidth / 2) offset = 0;
+    track.style.transform = `translateX(${offset}px)`;
+    requestAnimationFrame(loopSlider);
+  }
+  requestAnimationFrame(loopSlider);
+
+  // Clonar cards para o loop infinito
+  const cards = [...track.children];
+  cards.forEach(c => track.appendChild(c.cloneNode(true)));
+
+  // Arraste manual em mobile/desktop
+  track.addEventListener("mousedown", e => {
+    isDown = true;
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = offset;
+  });
+  track.addEventListener("mouseleave", () => isDown = false);
+  track.addEventListener("mouseup", () => isDown = false);
+  track.addEventListener("mousemove", e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = x - startX;
+    offset = scrollLeft + walk;
+    track.style.transform = `translateX(${offset}px)`;
+  });
+
+  // Suporte a toque (mobile)
+  track.addEventListener("touchstart", e => {
+    isDown = true;
+    startX = e.touches[0].pageX;
+    scrollLeft = offset;
+  });
+  track.addEventListener("touchmove", e => {
+    if (!isDown) return;
+    const x = e.touches[0].pageX;
+    const walk = x - startX;
+    offset = scrollLeft + walk;
+    track.style.transform = `translateX(${offset}px)`;
+  });
+  track.addEventListener("touchend", () => isDown = false);
+
+
+  </script>
 </body>
 </html>

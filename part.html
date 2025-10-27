@@ -3,96 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loading Part...</title>
+  <title>Spare Parts Suppliers - Connect. Quote. Supply.</title>
+  <link rel="icon" type="image/x-icon" href="/img/logo.png">
+  <link rel="stylesheet" href="assets/css/global.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    /* (mantive todo o seu CSS original) */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
-    .logo img { height: 40px; }
-    .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
-    .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; }
-    .nav-links a:hover { color: #e53e3e; }
-    .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; font-size: 14px; }
-    .btn-outline { border: 2px solid #e53e3e; color: #e53e3e; background: transparent; }
-    .btn-primary { background: #e53e3e; color: white; }
-    .breadcrumb { background: white; padding: 120px 0 20px; border-bottom: 1px solid #e2e8f0; }
-    .breadcrumb-nav { color: #4a5568; font-size: 0.9rem; }
-    .breadcrumb-nav a { color: #e53e3e; text-decoration: none; }
-    .part-header { background: white; padding: 2rem 0; border-bottom: 1px solid #e2e8f0; }
-    .part-main { display: grid; grid-template-columns: 300px 1fr auto; gap: 2rem; align-items: start; }
-    .part-image { width: 300px; height: 300px; background: linear-gradient(135deg, #f7fafc, #edf2f7); border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; }
-    .part-image i { font-size: 4rem; color: #a0aec0; }
-    .part-info h1 { font-size: 2rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem; }
-    .part-number { font-size: 1.2rem; color: #e53e3e; font-weight: 600; margin-bottom: 1rem; }
-    .part-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .spec-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f7fafc; }
-    .spec-label { color: #4a5568; }
-    .spec-value { font-weight: 600; color: #1a202c; }
-    .part-actions { display: flex; flex-direction: column; gap: 1rem; min-width: 200px; }
-    .supplier-count { background: #f7fafc; padding: 1rem; border-radius: 8px; text-align: center; }
-    .count-number { font-size: 2rem; font-weight: 700; color: #e53e3e; }
-    .count-label { color: #4a5568; font-size: 0.9rem; }
-    .request-quote-btn { background: #e53e3e; color: white; padding: 15px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; text-align: center; transition: all 0.3s; }
-    .request-quote-btn:hover { background: #c53030; transform: translateY(-2px); }
-    .related-section { background: white; padding: 2rem 0; }
-    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    .related-card { background: #f8fafc; border-radius: 8px; padding: 1rem; border: 1px solid #e2e8f0; transition: all 0.3s; cursor: pointer; }
-    .related-card:hover { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
-    .related-part-number { font-weight: 700; color: #e53e3e; margin-bottom: 0.5rem; }
-    .related-description { color: #4a5568; font-size: 0.9rem; margin-bottom: 0.5rem; }
-  </style>
 </head>
-
 <body>
   <header>
-    <nav class="container">
-      <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="Logo"></a>
+  <nav class="container">
+      <a href="index.html" class="logo"><img src="assets/img/logo.png" alt=""></a>
       <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#how-it-works">How it Works</a></li>
         <li><a href="search.html">Search Parts</a></li>
-        <li><a href="pricing.html">Pricing</a></li>
-        <li><a href="suppliers.html">Suppliers</a></li>
+        <li><a href="brands.html">Brands</a></li>
+        <li><a href="faq.html">FAQ</a></li>
       </ul>
-      <div style="display:flex; gap:1rem;">
-        <a href="login.html" class="btn btn-outline">Sign In</a>
-        <a href="register.html" class="btn btn-primary">Get Started</a>
+      <div class="cta-buttons">
+        <a href="#register" class="btn btn-primary">Become a Supplier</a>
       </div>
+      <button class="mobile-menu"><i class="fas fa-bars"></i></button>
     </nav>
   </header>
 
-  <main>
-    <section class="breadcrumb">
+  <div class="mobile-nav">
+    <a href="index.html">Home</a>
+    <a href="index.html#how-it-works">How it Works</a>
+    <a href="search.html">Search Parts</a>
+    <a href="brands.html">Brands</a>
+    <a href="faq.html">FAQ</a>
+    <a href="#register" class="btn btn-primary">Become a Supplier</a>
+  </div>
+  <div class="mobile-overlay"></div>
+
+  <main style="padding-top:100px">
+    <section class="breadcrumb bg-white" style="padding:1rem 0; border-bottom:1px solid #eee;">
       <div class="container">
-        <nav class="breadcrumb-nav" id="breadcrumb">
-          <a href="index.html">Home</a> > 
-          <a href="search.html">Search</a> > 
-          <span id="breadcrumb-part">Loading...</span>
-        </nav>
+        <a href="index.html" class="text-primary">Home</a> >
+        <a href="search.html" class="text-primary">Search</a> >
+        <span id="breadcrumb-part">Loading...</span>
       </div>
     </section>
 
     <section class="part-header">
       <div class="container">
-        <div class="part-main">
-          <div class="part-image">
-            <i class="fas fa-cogs"></i>
-          </div>
+        <div class="grid" style="grid-template-columns: 300px 1fr 200px; gap:2rem;">
+          <div class="part-image card text-center"><i class="fas fa-cogs fa-3x text-muted"></i></div>
           <div class="part-info">
             <h1 id="partTitle">Loading...</h1>
-            <div class="part-number" id="partCode"></div>
-            <div class="part-specs" id="partSpecs"></div>
+            <div id="partCode" class="text-primary"></div>
+            <div id="partSpecs"></div>
           </div>
           <div class="part-actions">
-            <div class="supplier-count">
-              <div class="count-number" id="supplierCount">--</div>
-              <div class="count-label">Suppliers Available</div>
+            <div class="supplier-count text-center card">
+              <div id="supplierCount" class="text-primary" style="font-size:2rem; font-weight:700;">--</div>
+              <div class="text-muted">Suppliers Available</div>
             </div>
-            <a href="#" class="request-quote-btn" id="quoteBtn"><i class="fas fa-envelope"></i> Request Quotes</a>
+            <a href="#" class="btn btn-primary" id="quoteBtn"><i class="fas fa-envelope"></i> Request Quotes</a>
           </div>
         </div>
       </div>
@@ -100,97 +68,12 @@
 
     <section class="related-section">
       <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" id="relatedTitle">Related Parts</h2>
-        </div>
-        <div class="related-grid" id="relatedGrid"></div>
+        <h2 id="relatedTitle" class="section-title">Related Parts</h2>
+        <div id="relatedGrid" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"></div>
       </div>
     </section>
   </main>
 
-  <script>
-    const SUPABASE_URL = "https://kgdszmdcdatbvmjctnkw.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtnZHN6bWRjZGF0YnZtamN0bmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MjA5NjksImV4cCI6MjA3NjM5Njk2OX0.FYalhBpdRjORQ0bVkLoRpiCRNT2bMKHeCz9UU5YgvhY";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Lê o código da URL
-    function getPartCode() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("code");
-    }
-
-    async function loadPart() {
-      const code = getPartCode();
-      if (!code) return;
-
-      // Busca a peça pelo código
-      const { data, error } = await supabase
-        .from("parts")
-        .select("*")
-        .eq("code", code)
-        .limit(1)
-        .single();
-
-      if (error || !data) {
-        document.getElementById("partTitle").textContent = "Part not found";
-        document.getElementById("partSpecs").innerHTML = "<p>We couldn't find this part.</p>";
-        return;
-      }
-
-      // Atualiza os elementos da página
-      document.title = `${data.brand} ${data.name} - ${data.code}`;
-      document.getElementById("partTitle").textContent = `${data.brand} ${data.name}`;
-      document.getElementById("partCode").textContent = `Part Number: ${data.code}`;
-      document.getElementById("supplierCount").textContent = data.fake_supplier_count || Math.floor(Math.random() * 20) + 5;
-      document.getElementById("breadcrumb-part").textContent = `${data.brand} ${data.name}`;
-      document.getElementById("relatedTitle").textContent = `Related ${data.brand} Parts`;
-
-      const specsHTML = `
-        <div class="spec-item"><span class="spec-label">Brand:</span><span class="spec-value">${data.brand}</span></div>
-        <div class="spec-item"><span class="spec-label">Category:</span><span class="spec-value">${data.category || "N/A"}</span></div>
-        <div class="spec-item"><span class="spec-label">Description:</span><span class="spec-value">${data.name || "N/A"}</span></div>
-      `;
-      document.getElementById("partSpecs").innerHTML = specsHTML;
-
-      // Atualiza botão de cotação
-      document.getElementById("quoteBtn").href = `quote.html?part=${data.code}&brand=${data.brand}`;
-
-      // Carrega peças relacionadas da mesma marca
-      loadRelatedParts(data.brand, data.code);
-    }
-
-    async function loadRelatedParts(brand, currentCode) {
-      const { data, error } = await supabase
-        .from("parts")
-        .select("*")
-        .eq("brand", brand)
-        .neq("code", currentCode)
-        .limit(6);
-
-      const grid = document.getElementById("relatedGrid");
-      grid.innerHTML = "";
-
-      if (error || !data || data.length === 0) {
-        grid.innerHTML = "<p>No related parts found.</p>";
-        return;
-      }
-
-      data.forEach(part => {
-        const card = document.createElement("div");
-        card.className = "related-card";
-        card.innerHTML = `
-          <div class="related-part-number">${part.code}</div>
-          <div class="related-description">${part.name}</div>
-          <div class="related-suppliers">${part.fake_supplier_count || 0} suppliers available</div>
-        `;
-        card.onclick = () => {
-          window.location.href = `part-detail.html?code=${part.code}`;
-        };
-        grid.appendChild(card);
-      });
-    }
-
-    loadPart();
-  </script>
+  <script src="assets/js/global.js"></script>
 </body>
 </html>
